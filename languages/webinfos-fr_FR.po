@@ -1,0 +1,282 @@
+# WordPress Blank Pot
+# Copyright (C) 2014 ...
+# This file is distributed under the GNU General Public License v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
+"POT-Creation-Date: 2016-03-25 15:35+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Textdomain-Support: yesX-Generator: Poedit 1.6.4\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;esc_html_e;esc_html_x:1,2c;esc_html__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;"
+"_x:1,2c;_n:1,2;_n_noop:1,2;__ngettext:1,2;__ngettext_noop:1,2;_c,_nc:4c,1,2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Generator: Poedit 1.8.6\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: custom_welcome.php:51
+msgid "Attachments : "
+msgstr "Pièces jointes : "
+
+#: custom_welcome.php:86 infos.php:539
+msgid "Your browser does not support HTML5 video."
+msgstr "Votre navigateur ne supporte pas les videos HTML5"
+
+#: custom_welcome.php:95
+msgid "Contact"
+msgstr "Contact"
+
+#: custom_welcome.php:123
+msgid "Phone : "
+msgstr "Tel : "
+
+#: custom_welcome.php:130
+msgid "Email : "
+msgstr "Mail : "
+
+#: infos.php:187
+msgid "Webinfos plugin"
+msgstr "Extension Webinfos"
+
+#: infos.php:187
+msgid "Webinfos Settings"
+msgstr "Options Webinfos"
+
+#: infos.php:223
+#, php-format
+msgid "The uploaded file must be in %s format"
+msgstr "Le fichier uploadé doit être au format %s"
+
+#: infos.php:223
+msgid "character left."
+msgstr "caractère restant."
+
+#: infos.php:223
+msgid "characters left."
+msgstr "caractères restants."
+
+#: infos.php:223
+msgid "New attachments list : "
+msgstr ""
+
+#: infos.php:232
+#, php-format
+msgid "Version %s"
+msgstr "Version %s"
+
+#: infos.php:233
+msgid "Welcome to the setting panel of Webinfos plugin"
+msgstr "Bienvenue dans le panneau de configuration de l’extension Webinfos."
+
+#: infos.php:240
+msgid "Activate message"
+msgstr "Activer message"
+
+#: infos.php:246
+msgid "Choose action"
+msgstr "Choisir action"
+
+#: infos.php:256
+msgid "Save changes"
+msgstr "Enregistrer les modifications"
+
+#: infos.php:277
+msgid "Feedback"
+msgstr "Réaction"
+
+#: infos.php:278
+msgid "Did you find a bug ?"
+msgstr "Vous avez trouvé un bug ?"
+
+#: infos.php:278
+msgid "Do you have suggestions?"
+msgstr "Vous avez des idées ?"
+
+#: infos.php:279
+msgid ""
+"There are several ways to report bugs and/or give feedback about the "
+"Webinfos plugins : "
+msgstr ""
+"Il existe plusieurs moyens de signaler les bugs et/ou donner son avis à "
+"propos de l’extension Webinfos :"
+
+#: infos.php:281
+#, php-format
+msgid "Use a GitHub ticket at this <a href=\"%s\">link</a>."
+msgstr "Utiliser un ticket Github en cliquant <a href=\"%s\">ici</a>."
+
+#: infos.php:282
+#, php-format
+msgid "Use a Wordpress ticket at this <a href=\"%s\">link</a>."
+msgstr "Utiliser un ticket Wordpress en cliquant <a href=\"%s\">ici</a>."
+
+#: infos.php:283
+msgid "Use the form below to contact the plugin author."
+msgstr ""
+"Utiliser le formulaire ci-dessous pour contacter l’auteur de l’extension."
+
+#: infos.php:290
+msgid "Send feedback"
+msgstr "Envoyer réaction"
+
+#: infos.php:301
+msgid "Choose the message that will be shown in the dashboard"
+msgstr "Sélectionner le message qui sera afficher dans le tableau de bord"
+
+#: infos.php:302
+msgid "Activate message :"
+msgstr "Activer message : "
+
+#: infos.php:306
+msgid "Change welcome message"
+msgstr "Modifier le message d’accueil"
+
+#: infos.php:307
+msgid "Action :"
+msgstr "Action : "
+
+#: infos.php:312
+msgid "Welcome message settings"
+msgstr "Options du message d’accueil"
+
+#: infos.php:313
+msgid "Contact informations"
+msgstr "Informations de contact"
+
+#: infos.php:315
+msgid "Message num:"
+msgstr "Numéro du message : "
+
+#: infos.php:317
+msgid "Title :"
+msgstr "Titre : "
+
+#: infos.php:318
+msgid "Website URL :"
+msgstr "URL du site internet : "
+
+#: infos.php:319
+msgid "Upload logo :"
+msgstr "Upload logo : "
+
+#: infos.php:320
+msgid "Logo alternate text :"
+msgstr "Texte alternatif du logo : "
+
+#: infos.php:321
+msgid "Welcome message :"
+msgstr "Message d’accueil : "
+
+#: infos.php:322
+msgid "Attachments :"
+msgstr "Pièces jointes : "
+
+#: infos.php:323
+msgid "Upload video :"
+msgstr "Upload video : "
+
+#: infos.php:324
+msgid "Show contact infos :"
+msgstr "Afficher les informations de contact : "
+
+#: infos.php:325
+msgid "Upload photo :"
+msgstr "Upload photo : "
+
+#: infos.php:326
+msgid "Photo alternate text :"
+msgstr "Texte alternatif de la photo : "
+
+#: infos.php:327
+msgid "Phone :"
+msgstr "Tel : "
+
+#: infos.php:328
+msgid "Email :"
+msgstr "Mail : "
+
+#: infos.php:333
+msgid "Fill the form below to send your feedback directly to the author"
+msgstr ""
+"Remplissez le formulaire ci-dessous pour envoyer votre réaction directement "
+"à l’auteur"
+
+#: infos.php:334
+msgid "Feedback sender :"
+msgstr "Expéditeur de la réaction :"
+
+#: infos.php:335
+msgid "Feedback subject :"
+msgstr "Sujet de la réaction :"
+
+#: infos.php:336
+msgid "Feedback message :"
+msgstr "Message de la réaction :"
+
+#: infos.php:366
+msgid "Add message"
+msgstr "Ajouter message"
+
+#: infos.php:372
+msgid "Edit message "
+msgstr "Editer message"
+
+#: infos.php:373
+msgid "Erase message "
+msgstr "Effacer message"
+
+#: infos.php:431 infos.php:497
+#, php-format
+msgid "Uploaded file must be in %s or %s format."
+msgstr "Le fichier uploadé doit être au format %s ou %s."
+
+#: infos.php:452
+#, php-format
+msgid "%d character left."
+msgid_plural "%d characters left."
+msgstr[0] "%d caractère restant."
+msgstr[1] "%d caractères restants."
+
+#: infos.php:456
+msgid "HTML tags are supported."
+msgstr "Les balises HTML sont supportés."
+
+#: infos.php:546
+#, php-format
+msgid "Uploaded file must be in %s format."
+msgstr "Le fichier uploadé doit être au format %s."
+
+#: infos.php:556
+msgid "The website URL will be applied on the logo."
+msgstr ""
+"L’URL du site internet sera appliqué sur le logo en tant que lien hypertexte."
+
+#: infos.php:565
+msgid "Attachments list : "
+msgstr "Liste de pièces jointes : "
+
+#: infos.php:596
+msgid "Click or drop your files here"
+msgstr "Cliquer ou glissez-déposez vos fichier ici"
+
+#: infos.php:601
+msgid "You can upload several files as attachment."
+msgstr "Plusieurs fichiers peuvent être uploadé en tant que pièce jointe."
+
+#~ msgid "Content created with the Webinfos plugin"
+#~ msgstr "Contenu crée avec l’extension Webinfos"
+
+#~ msgid "Uploaded files must be in %s or %s format."
+#~ msgstr "Les fichiers uploadés doivent être au format %s ou %s."
+
+#~ msgid "Uploaded files must be in %s format."
+#~ msgstr "Les fichiers uploadés doivent être au format %s."

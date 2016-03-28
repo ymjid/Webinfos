@@ -1,0 +1,338 @@
+# WordPress Blank Pot
+# Copyright (C) 2014 ...
+# This file is distributed under the GNU General Public License v2 or later.
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: "
+"2016-03-25 15:33+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Your "
+"Name <you@example.com>\n"
+"Language-Team: \n"
+"Report-Msgid-Bugs-To: "
+"Translator Name "
+"<translations@example."
+"com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/"
+"plain; charset=UTF-8\n"
+"Content-Transfer-"
+"Encoding: 8bit\n"
+"Plural-Forms: "
+"nplurals=2; plural=n != "
+"1;\n"
+"X-Textdomain-Support: "
+"yesX-Generator: Poedit "
+"1.6.4\n"
+"X-Poedit-SourceCharset: "
+"UTF-8\n"
+"X-Poedit-KeywordsList: "
+"__;_e;esc_html_e;"
+"esc_html_x:1,2c;"
+"esc_html__;esc_attr_e;"
+"esc_attr_x:1,2c;"
+"esc_attr__;_ex:1,2c;"
+"_nx:4c,1,2;"
+"_nx_noop:4c,1,2;_x:1,2c;"
+"_n:1,2;_n_noop:1,2;"
+"__ngettext:1,2;"
+"__ngettext_noop:1,2;_c,"
+"_nc:4c,1,2\n"
+"X-Poedit-Basepath: ..\n"
+"Language: en_US\n"
+"X-Generator: Poedit "
+"1.8.6\n"
+"X-Poedit-"
+"SearchPath-0: .\n"
+
+#: custom_welcome.php:51
+msgid "Attachments : "
+msgstr ""
+
+#: custom_welcome.php:86
+#: infos.php:539
+msgid ""
+"Your browser does not "
+"support HTML5 video."
+msgstr ""
+
+#: custom_welcome.php:95
+msgid "Contact"
+msgstr ""
+
+#: custom_welcome.php:123
+msgid "Phone : "
+msgstr ""
+
+#: custom_welcome.php:130
+msgid "Email : "
+msgstr ""
+
+#: infos.php:187
+msgid "Webinfos plugin"
+msgstr ""
+
+#: infos.php:187
+msgid "Webinfos Settings"
+msgstr ""
+
+#: infos.php:223
+#, php-format
+msgid ""
+"The uploaded file must "
+"be in %s format"
+msgstr ""
+
+#: infos.php:223
+msgid "character left."
+msgstr ""
+
+#: infos.php:223
+msgid "characters left."
+msgstr ""
+
+#: infos.php:223
+msgid ""
+"New attachments list : "
+msgstr ""
+
+#: infos.php:232
+#, php-format
+msgid "Version %s"
+msgstr ""
+
+#: infos.php:233
+msgid ""
+"Welcome to the setting "
+"panel of Webinfos plugin"
+msgstr ""
+
+#: infos.php:240
+msgid "Activate message"
+msgstr ""
+
+#: infos.php:246
+msgid "Choose action"
+msgstr ""
+
+#: infos.php:256
+msgid "Save changes"
+msgstr ""
+
+#: infos.php:277
+msgid "Feedback"
+msgstr ""
+
+#: infos.php:278
+msgid ""
+"Did you find a bug ?"
+msgstr ""
+
+#: infos.php:278
+msgid ""
+"Do you have suggestions?"
+msgstr ""
+
+#: infos.php:279
+msgid ""
+"There are several ways "
+"to report bugs and/or "
+"give feedback about the "
+"Webinfos plugins : "
+msgstr ""
+
+#: infos.php:281
+#, php-format
+msgid ""
+"Use a GitHub ticket at "
+"this <a href=\"%s"
+"\">link</a>."
+msgstr ""
+
+#: infos.php:282
+#, php-format
+msgid ""
+"Use a Wordpress ticket "
+"at this <a href=\"%s"
+"\">link</a>."
+msgstr ""
+
+#: infos.php:283
+msgid ""
+"Use the form below to "
+"contact the plugin "
+"author."
+msgstr ""
+
+#: infos.php:290
+msgid "Send feedback"
+msgstr ""
+
+#: infos.php:301
+msgid ""
+"Choose the message that "
+"will be shown in the "
+"dashboard"
+msgstr ""
+
+#: infos.php:302
+msgid "Activate message :"
+msgstr ""
+
+#: infos.php:306
+msgid ""
+"Change welcome message"
+msgstr ""
+
+#: infos.php:307
+msgid "Action :"
+msgstr ""
+
+#: infos.php:312
+msgid ""
+"Welcome message settings"
+msgstr ""
+
+#: infos.php:313
+msgid ""
+"Contact informations"
+msgstr ""
+
+#: infos.php:315
+msgid "Message num:"
+msgstr ""
+
+#: infos.php:317
+msgid "Title :"
+msgstr ""
+
+#: infos.php:318
+msgid "Website URL :"
+msgstr ""
+
+#: infos.php:319
+msgid "Upload logo :"
+msgstr ""
+
+#: infos.php:320
+msgid ""
+"Logo alternate text :"
+msgstr ""
+
+#: infos.php:321
+msgid "Welcome message :"
+msgstr ""
+
+#: infos.php:322
+msgid "Attachments :"
+msgstr ""
+
+#: infos.php:323
+msgid "Upload video :"
+msgstr ""
+
+#: infos.php:324
+msgid ""
+"Show contact infos :"
+msgstr ""
+
+#: infos.php:325
+msgid "Upload photo :"
+msgstr ""
+
+#: infos.php:326
+msgid ""
+"Photo alternate text :"
+msgstr ""
+
+#: infos.php:327
+msgid "Phone :"
+msgstr ""
+
+#: infos.php:328
+msgid "Email :"
+msgstr ""
+
+#: infos.php:333
+msgid ""
+"Fill the form below to "
+"send your feedback "
+"directly to the author"
+msgstr ""
+
+#: infos.php:334
+msgid "Feedback sender :"
+msgstr ""
+
+#: infos.php:335
+msgid "Feedback subject :"
+msgstr ""
+
+#: infos.php:336
+msgid "Feedback message :"
+msgstr ""
+
+#: infos.php:366
+msgid "Add message"
+msgstr ""
+
+#: infos.php:372
+msgid "Edit message "
+msgstr ""
+
+#: infos.php:373
+msgid "Erase message "
+msgstr ""
+
+#: infos.php:431
+#: infos.php:497
+#, php-format
+msgid ""
+"Uploaded file must be "
+"in %s or %s format."
+msgstr ""
+
+#: infos.php:452
+#, php-format
+msgid "%d character left."
+msgid_plural ""
+"%d characters left."
+msgstr[0] ""
+msgstr[1] ""
+
+#: infos.php:456
+msgid ""
+"HTML tags are supported."
+msgstr ""
+
+#: infos.php:546
+#, php-format
+msgid ""
+"Uploaded file must be "
+"in %s format."
+msgstr ""
+
+#: infos.php:556
+msgid ""
+"The website URL will be "
+"applied on the logo."
+msgstr ""
+
+#: infos.php:565
+msgid ""
+"Attachments list : "
+msgstr ""
+
+#: infos.php:596
+msgid ""
+"Click or drop your "
+"files here"
+msgstr ""
+
+#: infos.php:601
+msgid ""
+"You can upload several "
+"files as attachment."
+msgstr ""

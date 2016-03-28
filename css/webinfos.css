@@ -1,0 +1,37 @@
+.droppable {
+	border: 1px solid black;
+	text-align:center;
+	margin-top:5px;
+	margin-bottom:5px;
+	background-color:#fff;
+	padding: 75px;
+}
+.dragover {
+	border: 1px solid red;
+}
+.info_msg {
+	color:green;	
+}
+.warning_msg {
+	color:red;	
+}
+.feedback_container {
+	display:inline-table;
+	width:49%;
+}
+.feedback {
+	position:fixed;
+	border:1px solid #fff;
+	padding-left:25px;
+	padding-right:25px;	
+}
+.webinfos_options_container {
+	display:inline-table;
+	width:50%
+}
+.hide {
+	display:none;
+}
+textarea {
+    resize: none;
+}
