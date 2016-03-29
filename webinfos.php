@@ -49,13 +49,19 @@ class Webinfos_Plugin
 		register_uninstall_hook(__FILE__, array('Webinfos_Plugin', 'uninstall'));
     }
 
+/*
+** At the installation of the plugin, create a database table needed to save messages
+*/
     public function install()
     {
     	global $wpdb;
     	
     	$wpdb->query("CREATE TABLE IF NOT EXISTS {$wpdb->prefix}webinfos (id INT AUTO_INCREMENT PRIMARY KEY, title VARCHAR(255) NOT NULL, website VARCHAR(255) NOT NULL,imgurl VARCHAR(255) NOT NULL, imgalt VARCHAR(255) NOT NULL, msgtxt VARCHAR(500) NOT NULL, contact BOOL NOT NULL, contactimgurl VARCHAR(255) NOT NULL, contactimgalt VARCHAR(255) NOT NULL, tel VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, video VARCHAR(255) NOT NULL, attachment VARCHAR(5000) NOT NULL, state ENUM('alive', 'dead') NOT NULL);");
     }
-	
+
+/*
+** At the Uninstallation of the plugin, remove the database and its data.
+*/
     public function uninstall()
     {
     	global $wpdb;
@@ -64,29 +70,40 @@ class Webinfos_Plugin
 
     }
     
+/*
+** Load the language files which translate settings text
+*/
     public function webinfos_textdomain() {
     	$plugin_dir = basename(dirname(__FILE__)).'/languages';
     	load_plugin_textdomain('webinfos', false, $plugin_dir);	
     }
 
+/*
+** Save or edit a message and its relative datas
+*/
     public function save_data() {
     	global $wpdb;
+    	// if $_POST['test'] exist, message datas are fillable
     	if (isset($_POST['test'])) {
+    		// $contact = 1 -> show contact infos | $contact = 0 -> hide contact infos
     		if (isset($_POST['webinfos_contact'])) {
     			$contact="1";
     		}
     		else {
     			$contact="0";
     		}
+    		// test variables to test if imgs/video/files have been changed and files have been drag | default values : false
     		$testimg1='false';
     		$testimg2='false';
     		$testvideo='false';
     		$testattach='false';
     		$testdrop='false';
+    		// filelist is used to save attachment files in the database
     		$filelist="";
     		if (isset($_POST['dropused']) && $_POST['dropused']=="1") {
     			$testdrop='true';	
     		}
+    		// if testdrop = false -> upload files from the file button | if testdrop = true -> files are already uploaded
     		if ($testdrop=='false') {
     			if(isset($_FILES['webinfos_attachment']) && is_array($_FILES['webinfos_attachment']['name']) && $_FILES['webinfos_attachment']['name'][0] != ""){
     				$dirattach=plugin_dir_path(__FILE__).'attachment/';
@@ -102,16 +119,19 @@ class Webinfos_Plugin
     				$testattach='true';
     			}
     		}
+    		// upload logo img
     		if(isset($_FILES['webinfos_imgurl']) && $_FILES['webinfos_imgurl']['name']!=""){
     			$dirimg=plugin_dir_path(__FILE__).'img/';
 				move_uploaded_file ( $_FILES['webinfos_imgurl']['tmp_name'] , $dirimg.$_FILES['webinfos_imgurl']['name'] );
 				$testimg1='true';
     		}
+    		// upload cantact phpto
     		if(isset($_FILES['webinfos_contactimgurl']) && $_FILES['webinfos_contactimgurl']['name']!=""){
     			$dirimg=plugin_dir_path(__FILE__).'img/';
 				move_uploaded_file ( $_FILES['webinfos_contactimgurl']['tmp_name'] , $dirimg.$_FILES['webinfos_contactimgurl']['name'] );
 				$testimg2='true';
     		}
+    		// upload msg video
     		if(isset($_FILES['webinfos_video']) && $_FILES['webinfos_video']['name']!=""){
     			$dirvid=plugin_dir_path(__FILE__).'video/';
 				move_uploaded_file ( $_FILES['webinfos_video']['tmp_name'] , $dirvid.$_FILES['webinfos_video']['name'] );
@@ -121,7 +141,9 @@ class Webinfos_Plugin
 			$contactimgurl=$_FILES['webinfos_contactimgurl']['name'];
 			$video=$_FILES['webinfos_video']['name'];
 			$attach=$filelist;
+			// if $_POST['webinfos_msg'] doesn't exist -> msg doesn't exist so we add it in the database
 			if (!isset($_POST['webinfos_msg'])) {
+				// if $testdrop = false -> we add the msg in the database with its data | if $testdrop = true -> msg attachment files already exist so we edit the msg in database with its missing datas 
 				if ($testdrop=='false') {
 					$wpdb->insert("{$wpdb->prefix}webinfos", 
 					array('title' => $_POST['webinfos_title'], 'website' => $_POST['webinfos_website'], 'imgurl' => $_FILES['webinfos_imgurl']['name'], 'imgalt' => $_POST['webinfos_imgalt'], 'msgtxt' => $_POST['webinfos_msgtxt'], 'contact' => $contact, 'contactimgurl' => $_FILES['webinfos_contactimgurl']['name'], 'contactimgalt' => $_POST['webinfos_contactimgalt'], 'tel' => $_POST['webinfos_tel'], 'email' => $_POST['webinfos_email'], 'video' => $_FILES['webinfos_video']['name'], 'attachment' => $filelist, 'state' => 'alive')
@@ -135,6 +157,7 @@ class Webinfos_Plugin
 						);
 				}
 			}
+			// if $_POST['webinfos_msg'] exists and is != 0 -> we want to edit message data
 			if (isset($_POST['webinfos_msg']) &&  $_POST['webinfos_msg'] != '0') {
 				$num=$_POST['webinfos_msg'];
 				$row = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}webinfos WHERE id = '$num'");
@@ -157,11 +180,14 @@ class Webinfos_Plugin
 				}
 			}
     	}
+    	// if $_POST['test'] doesn't exist, message datas aren't fillable
     	else {
+    		//variable to check msg state
     		$erase_msg='false';
     		if (isset($_POST['webinfos_nummsg']) ) {
     			$num=abs($_POST['webinfos_nummsg']);
     		}
+    		// if $_POST['webinfos_nummsg'] < 0 -> we want to erase the msg (for real we edit the msg state)
     		if (isset($num)  && $_POST['webinfos_nummsg'] < 0) {
 				$row = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}webinfos WHERE id = '$num'");
 				if (!is_null($row)) {
@@ -171,6 +197,7 @@ class Webinfos_Plugin
 					$erase_msg='true';
 				}
 			}
+			// if we erased the active msg we change the active msg to the first usable msg or we don't active msg
 			if (isset($num) && $num == get_option('active_msg') && $erase_msg=='true') {
 				$row = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}webinfos WHERE state = 'alive'");
 				if (!is_null($row)) {
@@ -183,14 +210,16 @@ class Webinfos_Plugin
     	}
 	}
 	
+	// add a webinfos setting button to the admin button
 	public function add_admin_menu() {
 		add_menu_page(__('Webinfos plugin', 'webinfos'), __('Webinfos Settings', 'webinfos'), 'manage_options', 'webinfos', array($this, 'menu_html'));
 
 	}
 	
+	// webinfos setting html code
 	public function menu_html(){
 		global $wpdb;
-		
+			// define the required format for the logo
 				$imgext= array('png', 'jpg');
 			$imgformat="";
 			for ($i=0; $i< sizeof($imgext); $i++) {
@@ -201,6 +230,7 @@ class Webinfos_Plugin
 					$imgformat=$imgformat.$imgext[$i]."/";
 				}
 			}
+			// define the required format for the contact photo
 			$imgext2= array('png', 'jpg');
 			$imgformat2="";
 			for ($i=0; $i< sizeof($imgext2); $i++) {
@@ -211,6 +241,7 @@ class Webinfos_Plugin
 					$imgformat2=$imgformat2.$imgext2[$i]."/";
 				}
 			}
+			// define the required format for the video
 			$vidext= array('mp4');
 			$vidformat="";
 			$vidformat=$vidformat.$vidext[0];	
@@ -233,6 +264,7 @@ class Webinfos_Plugin
 		<p><?php _e('Welcome to the setting panel of Webinfos plugin', 'webinfos'); ?></p>
 		<form method="post" action="options.php">
 			<?php 
+			// we use only usable msg for activation
 			$row = $wpdb->get_row("SELECT id FROM {$wpdb->prefix}webinfos WHERE state = 'alive'");
 			if (!is_null($row)) { ?>
 			<?php settings_fields('webinfos_active'); ?>
@@ -246,6 +278,7 @@ class Webinfos_Plugin
 			<?php submit_button(__('Choose action', 'webinfos')) ?>
 		</form>
 		<?php
+		// we show msg datas form only if we want to add or edit a message
 		if (isset($_POST['webinfos_nummsg']) && $_POST['webinfos_nummsg'] >= 0) {			
 		?>
 		<form method="post" action="#" id="message_content" enctype="multipart/form-data">
@@ -275,6 +308,7 @@ class Webinfos_Plugin
 		}
 		?>
 		</div>
+		<!-- feedback section of the plugin -->
 		<div class="feedback_container">
 		<div class="feedback">
 		<h1><?php _e('Feedback', 'webinfos');?></h2>
@@ -297,23 +331,30 @@ class Webinfos_Plugin
 		<link rel="stylesheet" href="<?php echo plugin_dir_url(__FILE__).'css/webinfos.css'; ?>" />
 		<?php
 	}
-	
+	/*
+	** registered settings for msg activation
+	*/
 	public function register_active_msg () {
 		register_setting('webinfos_active', 'active_msg');
 		
 		add_settings_section('webinfos_section', __('Choose the message that will be shown in the dashboard', 'webinfos'), array($this, 'section_html'), 'webinfos_active');
 		add_settings_field('active_msg', __('Activate message :', 'webinfos'), array($this, 'activemsg_html'), 'webinfos_active', 'webinfos_section');
 	}
-	
+	/*
+	** registered settings for msg actions
+	*/
 	public function register_actions(){
 		add_settings_section('webinfos_section0', __('Change welcome message', 'webinfos'), array($this, 'section_html'), 'webinfos_action');
 		add_settings_field('webinfos_nummsg', __('Action :', 'webinfos'), array($this, 'nummsg_html'), 'webinfos_action', 'webinfos_section0');
 	}
-	
+	/*
+	** registered settings for msg data
+	*/
 	public function register_settings() {
 		
 		add_settings_section('webinfos_section1', __('Welcome message settings', 'webinfos'), array($this, 'section_html'), 'webinfos_settings');
 		add_settings_section('webinfos_section2', __('Contact informations', 'webinfos'), array($this, 'section_html'), 'webinfos_settings');
+		// if we edit a msg we show its id
 		if (isset($_POST['webinfos_nummsg']) && $_POST['webinfos_nummsg'] != '0') {
 		add_settings_field('webinfos_msg', __('Message num:', 'webinfos'), array($this, 'editmsg_html'), 'webinfos_settings', 'webinfos_section1');
 		}
@@ -330,7 +371,9 @@ class Webinfos_Plugin
 		add_settings_field('webinfos_tel', __('Phone :', 'webinfos'), array($this, 'tel_html'), 'webinfos_settings', 'webinfos_section2');
 		add_settings_field('webinfos_email', __('Email :', 'webinfos'), array($this, 'email_html'), 'webinfos_settings', 'webinfos_section2');
 	}
-	
+	/*
+	** registered settings for feedback
+	*/
 	public function register_feedback () {
 		
 		add_settings_section('webinfos_feedback0', __('Fill the form below to send your feedback directly to the author', 'webinfos'), array($this, 'section_html'), 'webinfos_feedback');
@@ -343,6 +386,9 @@ class Webinfos_Plugin
 		
 	}
 	
+	/*
+	** html code used by msg activation settings
+	*/
 	public function activemsg_html() {
 		global $wpdb;
 		$result = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}webinfos WHERE state = 'alive'");
@@ -360,7 +406,9 @@ class Webinfos_Plugin
 			</select>
 		<?php
 	}
-	
+	/*
+	** html code used by msg data settings
+	*/
 	public function nummsg_html(){
 		global $wpdb;
 		$result = $wpdb->get_results("SELECT id FROM {$wpdb->prefix}webinfos WHERE state = 'alive'");
@@ -407,6 +455,7 @@ class Webinfos_Plugin
 		global $wpdb;
 		$id=$_POST['webinfos_nummsg'];
 		$row = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}webinfos WHERE id ='$id'");
+		// if the logo exist we resize it
 		if ($row->imgurl !="") {
 			$img=getimagesize (plugin_dir_url(__FILE__).'img/'.$row->imgurl);
 			$dwimg=$img[0];
@@ -473,6 +522,7 @@ class Webinfos_Plugin
 		global $wpdb;
 		$id=$_POST['webinfos_nummsg'];
 		$row = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}webinfos WHERE id ='$id'");
+		// if the photo exist we resize it
 		if ($row->contactimgurl != "") {
 			$img=getimagesize (plugin_dir_url(__FILE__).'img/'.$row->contactimgurl);
 			$dwimg=$img[0];
@@ -611,6 +661,9 @@ class Webinfos_Plugin
 	<?php	
 	}
 	
+	/*
+	** send an email to the author
+	*/
 	public function send_feedback() {
 		if (isset($_POST['testsend'])) {
 			$current_user=wp_get_current_user();
@@ -623,6 +676,9 @@ class Webinfos_Plugin
 		}
 	}
 	
+	/*
+	** html code used by feedback settings
+	*/
 	public function feedback_sender_html () {
 			$current_user=wp_get_current_user();
 			

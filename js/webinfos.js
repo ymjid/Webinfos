@@ -1,19 +1,19 @@
-function filechoosen (fileid, typefiletab, msgerror) {	// Test si le fichier uploader est conforme au condition
+function filechoosen (fileid, typefiletab, msgerror) {	// Check if uploaded file is in the requirement
 	var test = verifFileExtension(fileid, typefiletab, msgerror);
 	if (test == false) {
 		document.getElementById(fileid).value=null;
 	}
 }
 
-function getExtension(filename){	// Obtient l'extension d'un fichier
+function getExtension(filename){	// Get the file format
         var parts = filename.split(".");
         return (parts[(parts.length-1)]);
 }    
 
 
-// verifie l'extension d'un fichier uploader
-// champ : id du champ type file
-// listeExt : liste des extensions autorisees
+// check uploaded file format
+// champ : file button id
+// listeExt : allowed format list
 function verifFileExtension(champ, exttab, msgerror){
 	filename = document.getElementById(champ).value.toLowerCase();
 	fileExt = getExtension(filename);
@@ -44,7 +44,7 @@ function verifFileExtension(champ, exttab, msgerror){
 	return (false);
 }	
 
-function countchar(label, count){  // Compte le nombre de caracteres restant avant d'atteindre la limite 
+function countchar(label, count){  // Count the number of character left before reaching the limit. 
  	var charleft= (document.getElementById(label).maxLength - document.getElementById(label).value.length);
  	if (charleft > 1) {
  		document.getElementById(count).innerHTML = charleft + ' ' + object_name.charsmsg;
@@ -54,6 +54,7 @@ function countchar(label, count){  // Compte le nombre de caracteres restant ava
  	}
  }
 
+// drag & drop interactions
   (function(window) {
     function triggerCallback(e, callback) {
       if(!callback || typeof callback !== 'function') {
@@ -126,7 +127,7 @@ function callback(files) {
       	}
       }
  } 
-    
+    // upload dragged files 
     function ajaxupload () {
  		if (document.getElementById('dropused').value=="1") { 
  		var formData = new FormData();
@@ -153,7 +154,7 @@ function callback(files) {
  			document.getElementById('custom_submit').click();
  		}	
  	}
-
+// drag & drop interactions applies when the droppable area exists 
 if (document.getElementById('webinfos_attachment') != null){
 makeDroppable(element, callback);
 }

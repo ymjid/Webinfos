@@ -4,12 +4,16 @@ class Webinfos_Welcome {
 		add_action('wp_dashboard_setup', array($this, 'custom_welcome'));
 	}
 	
+	/*
+	** Create the content of the dashboard widget
+	*/
 	function custom_welcome_content () {
 		global $wpdb;
 		$id=get_option('active_msg');
 		$row = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}webinfos WHERE id ='$id'");
 		?>
 			<?php
+			// if logo exists we resize it.
 			if ($row->imgurl != "") {
 				$img=getimagesize (plugin_dir_url(__FILE__).'img/'.$row->imgurl);
 				$dwimg=$img[0];
@@ -28,6 +32,7 @@ class Webinfos_Welcome {
 					}
 					$img[0]= $img[1]/($dhimg/$dwimg);
 				}
+				// if website exists we make the logo clickable by adding the website link | if no website we just show the logo
 				if ($row->website != "") {
 				?>
 				<a href="<?php echo $row->website; ?>"><img src="<?php echo plugin_dir_url(__FILE__).'img/'.$row->imgurl; ?>" height="<?php echo $img[1].'px'; ?>" width:"<?php echo $img[0].'px'; ?>" alt="<?php echo $row->imgalt; ?>"></a>
@@ -44,6 +49,7 @@ class Webinfos_Welcome {
 			?>
 			<div><?php echo $row->msgtxt; ?></div>
 			<?php
+			// if attachment files is not empty, we show the list
 			if ($row->attachment != "") {
 			?>
 			<p> 
@@ -79,6 +85,7 @@ class Webinfos_Welcome {
 			}
 			?>
 			<?php
+			// if video exists we show the video in a html5 player
 			if ($row->video != null && $row->video != "") {
 			?>
 			<video width="auto" controls>
@@ -89,11 +96,13 @@ class Webinfos_Welcome {
 			}
 			?>
 			<?php
+			// if contact = 1, we show the contact infos
 			if ($row->contact=='1') {
 			?>
 				<div>
-				<div><p style="font-size:14px;"><b><?php _e('Contact', 'webinfos'); ?></b></p>
+				<div><p class="contact_title"><b><?php _e('Contact', 'webinfos'); ?></b></p>
 				<?php
+				// if photo exists we resize it.
 				if ($row->contactimgurl != "") {
 					$photo=getimagesize (plugin_dir_url(__FILE__).'img/'.$row->contactimgurl);
 					$dwimg=$photo[0];
@@ -118,16 +127,18 @@ class Webinfos_Welcome {
 				}
 				?>
 				<?php
+				// if tel is not empty we show it.
 				if ($row->tel != "") {
 				?>
-				<p style="margin-bottom:0px;"><u><?php _e('Phone : ', 'webinfos'); ?></u> <?php echo $row->tel; ?></p>
+				<p class="contact_phone"><u><?php _e('Phone : ', 'webinfos'); ?></u> <?php echo $row->tel; ?></p>
 				<?php
 				}
 				?>
 				<?php 
+				// if email is not empty we show it.
 				if ($row->email != "") {
 				?>
-				<p style="margin-top:0px;"><u><?php _e('Email : ', 'webinfos'); ?></u> <a href="<?php echo 'mailto:'.$row->email; ?>"><?php echo $row->email; ?></a></p></div>
+				<p class="contact_email"><u><?php _e('Email : ', 'webinfos'); ?></u> <a href="<?php echo 'mailto:'.$row->email; ?>"><?php echo $row->email; ?></a></p></div>
 				<?php 
 				}
 				?>
@@ -138,9 +149,12 @@ class Webinfos_Welcome {
 		
 		<?php
 	}
-
+	/*
+	** Create the dashboard widget
+	*/
 	function custom_welcome () {
 		global $wpdb;
+		// if a msg is activated we use the msg's title as widget title | if no msg is activated we set the title as "Undefined title"
 		if (get_option('active_msg')!= "0" && get_option('active_msg')!= "" && get_option('active_msg')!== null) {
 			$id=get_option('active_msg');
 			$row = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}webinfos WHERE id ='$id'");

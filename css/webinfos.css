@@ -35,3 +35,12 @@
 textarea {
     resize: none;
 }
+.contact_title {
+	font-size:14px;
+}
+.contact_phone {
+	margin-bottom:0px;
+}
+.contact_email {
+	margin-top:0px;	
+}
