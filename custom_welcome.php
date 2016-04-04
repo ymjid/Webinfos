@@ -10,7 +10,8 @@ class Webinfos_Welcome {
 	function custom_welcome_content () {
 		global $wpdb;
 		$id=get_option('active_msg');
-		$row = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}webinfos WHERE id ='$id'");
+		$selectsql = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}webinfos WHERE id = %d", $id);
+		$row = $wpdb->get_row($selectsql);
 		?>
 			<?php
 			// if logo exists we resize it.
@@ -35,19 +36,19 @@ class Webinfos_Welcome {
 				// if website exists we make the logo clickable by adding the website link | if no website we just show the logo
 				if ($row->website != "") {
 				?>
-				<a href="<?php echo $row->website; ?>"><img src="<?php echo plugin_dir_url(__FILE__).'img/'.$row->imgurl; ?>" height="<?php echo $img[1].'px'; ?>" width:"<?php echo $img[0].'px'; ?>" alt="<?php echo $row->imgalt; ?>"></a>
+				<a href="<?php echo esc_url($row->website); ?>"><img src="<?php echo esc_url(plugin_dir_url(__FILE__).'img/'.$row->imgurl); ?>" height="<?php echo esc_html($img[1]).'px'; ?>" width:"<?php echo esc_html($img[0]).'px'; ?>" alt="<?php echo esc_html($row->imgalt); ?>"></a>
 				<?php
 				}
 				else {
 				?>
-				<img src="<?php echo plugin_dir_url(__FILE__).'img/'.$row->imgurl; ?>" height="<?php echo $img[1].'px'; ?>" width:"<?php echo $img[0].'px'; ?>" alt="<?php echo $row->imgalt; ?>">
+				<img src="<?php echo esc_url(plugin_dir_url(__FILE__).'img/'.$row->imgurl); ?>" height="<?php echo esc_html($img[1]).'px'; ?>" width:"<?php echo esc_html($img[0]).'px'; ?>" alt="<?php echo esc_html($row->imgalt); ?>">
 				<?php
 				}
 				?>
 			<?php
 			}
 			?>
-			<div><?php echo $row->msgtxt; ?></div>
+			<div><?php echo esc_html($row->msgtxt); ?></div>
 			<?php
 			// if attachment files is not empty, we show the list
 			if ($row->attachment != "") {
@@ -64,7 +65,7 @@ class Webinfos_Welcome {
 				$nb++;
 				?>
 				<span>
-				<a href="<?php echo plugin_dir_url(__FILE__).'attachment/'.$filelist[$i]; ?>"><?php echo $filelist[$i] ?></a>
+				<a href="<?php echo esc_url(plugin_dir_url(__FILE__).'attachment/'.$filelist[$i]); ?>"><?php echo esc_html($filelist[$i]); ?></a>
 				<?php 
 				if ($i+1 != sizeof($filelist))  {
 					echo ' | ';	
@@ -89,7 +90,7 @@ class Webinfos_Welcome {
 			if ($row->video != null && $row->video != "") {
 			?>
 			<video width="auto" controls>
-  				<source src="<?php echo plugin_dir_url(__FILE__).'video/'.$row->video; ?>" type="video/mp4">
+  				<source src="<?php echo esc_url(plugin_dir_url(__FILE__).'video/'.$row->video); ?>" type="video/mp4">
   				<?php _e('Your browser does not support HTML5 video.', 'webinfos'); ?>
 			</video>
 			<?php
@@ -122,7 +123,7 @@ class Webinfos_Welcome {
 						$photo[0]= $photo[1]/($dhimg/$dwimg);
 					}
 				?>
-				<img src="<?php echo plugin_dir_url(__FILE__).'img/'.$row->contactimgurl; ?>" height="<?php echo $photo[1].'px'; ?>" width="<?php echo $photo[0].'px'; ?>" alt="<?php echo $row->contactimgalt; ?>" >
+				<img src="<?php echo esc_url(plugin_dir_url(__FILE__).'img/'.$row->contactimgurl); ?>" height="<?php echo esc_html($photo[1]).'px'; ?>" width="<?php echo esc_html($photo[0]).'px'; ?>" alt="<?php echo esc_html($row->contactimgalt); ?>" >
 				<?php
 				}
 				?>
@@ -130,7 +131,7 @@ class Webinfos_Welcome {
 				// if tel is not empty we show it.
 				if ($row->tel != "") {
 				?>
-				<p class="contact_phone"><u><?php _e('Phone : ', 'webinfos'); ?></u> <?php echo $row->tel; ?></p>
+				<p class="contact_phone"><u><?php _e('Phone : ', 'webinfos'); ?></u> <?php echo esc_html($row->tel); ?></p>
 				<?php
 				}
 				?>
@@ -138,7 +139,7 @@ class Webinfos_Welcome {
 				// if email is not empty we show it.
 				if ($row->email != "") {
 				?>
-				<p class="contact_email"><u><?php _e('Email : ', 'webinfos'); ?></u> <a href="<?php echo 'mailto:'.$row->email; ?>"><?php echo $row->email; ?></a></p></div>
+				<p class="contact_email"><u><?php _e('Email : ', 'webinfos'); ?></u> <a href="<?php echo esc_url('mailto:'.$row->email); ?>"><?php echo esc_html($row->email); ?></a></p></div>
 				<?php 
 				}
 				?>
@@ -157,7 +158,8 @@ class Webinfos_Welcome {
 		// if a msg is activated we use the msg's title as widget title | if no msg is activated we set the title as "Undefined title"
 		if (get_option('active_msg')!= "0" && get_option('active_msg')!= "" && get_option('active_msg')!== null) {
 			$id=get_option('active_msg');
-			$row = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}webinfos WHERE id ='$id'");
+			$selectsql = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}webinfos WHERE id = %d", $id);
+			$row = $wpdb->get_row($selectsql);
 			$webinfos_title=$row->title;
 		}
 		else {

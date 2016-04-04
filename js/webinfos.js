@@ -71,6 +71,21 @@ function countchar(label, count){  // Count the number of character left before 
       callback.call(null, files);
       
       dropfiles=files;
+      formData= new FormData();
+ 	 	formData.append("action" , "webinfos_action");
+ 		for(var i=0; i<files.length; i++) {
+      		formData.append("dragfiles[" + i + "]" , files[i]);
+ 		}
+ 		if (document.getElementById('webinfos_msg') != null) {
+      		msg=document.getElementById('webinfos_msg').value;
+      		formData.append("editmsg" , document.getElementById('webinfos_msg').value);
+      	}
+      	else {
+      		msg = 0;
+      		formData.append("editmsg" , 0);
+      	}
+      	formData.append("plugin_dir", plug_dir);
+
     }
    
     function makeDroppable(ele, callback) {
@@ -127,33 +142,29 @@ function callback(files) {
       	}
       }
  } 
+ 
     // upload dragged files 
-    function ajaxupload () {
- 		if (document.getElementById('dropused').value=="1") { 
- 		var formData = new FormData();
- 		for(var i=0; i<dropfiles.length; i++) {
-      		formData.append('dragfiles['+ i + ']', dropfiles[i]);
-      		if (document.getElementById('webinfos_msg') != null) {
-      			formData.append('editmsg', document.getElementById('webinfos_msg').value);
-      		}
-      		else {
-      			formData.append('editmsg', "0");
-      		}
- 		}
- 		 $.ajax({
-  		  url: '../wp-content/plugins/infos/js/ajax/attach.php',
-  		  method: 'post',
-  		  data: formData,
-   		 processData: false,
-  		  contentType: false,
-  		  success: function(returnData) {
-   			 document.getElementById('custom_submit').click();
-  			}});
- 		}
- 		else {
- 			document.getElementById('custom_submit').click();
- 		}	
- 	}
+     jQuery(document).ready(function($) {
+			$('#dummy_submit').click(function(e) {
+     			if (document.getElementById('dropused').value=="1") { 
+					$.ajax({
+  						type: "POST",
+  						url: ajaxurl,
+  						data: formData,
+  						processData: false, 
+  						contentType: false,
+  						success: function(returnData) {
+							document.getElementById("custom_submit").click();
+						}
+					});
+     			}
+     			else {
+     				document.getElementById("custom_submit").click();
+     			}
+     	});
+
+	}); 	
+	
 // drag & drop interactions applies when the droppable area exists 
 if (document.getElementById('webinfos_attachment') != null){
 makeDroppable(element, callback);

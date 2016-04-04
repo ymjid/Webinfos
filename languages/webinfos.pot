@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: "
-"2016-03-25 15:33+0100\n"
+"2016-04-05 00:19+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Your "
 "Name <you@example.com>\n"
@@ -47,95 +47,146 @@ msgstr ""
 "X-Poedit-"
 "SearchPath-0: .\n"
 
-#: custom_welcome.php:51
+#: custom_welcome.php:58
 msgid "Attachments : "
 msgstr ""
 
-#: custom_welcome.php:86
-#: infos.php:539
+#: custom_welcome.php:94
+#: webinfos.php:868
 msgid ""
 "Your browser does not "
 "support HTML5 video."
 msgstr ""
 
-#: custom_welcome.php:95
+#: custom_welcome.php:104
 msgid "Contact"
 msgstr ""
 
-#: custom_welcome.php:123
+#: custom_welcome.php:134
 msgid "Phone : "
 msgstr ""
 
-#: custom_welcome.php:130
+#: custom_welcome.php:142
 msgid "Email : "
 msgstr ""
 
-#: infos.php:187
+#: webinfos.php:94
+msgid ""
+"An error occurs with "
+"form verification"
+msgstr ""
+
+#: webinfos.php:101
+msgid ""
+"An error occurs with "
+"attachment files"
+msgstr ""
+
+#: webinfos.php:135
+msgid ""
+"An error occurs with "
+"contact email"
+msgstr ""
+
+#: webinfos.php:144
+msgid ""
+"An error occurs with "
+"contact checkbox"
+msgstr ""
+
+#: webinfos.php:185
+msgid ""
+"An error occurs with "
+"attachment file list"
+msgstr ""
+
+#: webinfos.php:200
+msgid ""
+"An error occurs with "
+"uploaded logo"
+msgstr ""
+
+#: webinfos.php:214
+msgid ""
+"An error occurs with "
+"uploaded photo"
+msgstr ""
+
+#: webinfos.php:228
+msgid ""
+"An error occurs with "
+"uploaded video"
+msgstr ""
+
+#: webinfos.php:303
+#: webinfos.php:507
+msgid ""
+"An error occurs with "
+"message id"
+msgstr ""
+
+#: webinfos.php:343
 msgid "Webinfos plugin"
 msgstr ""
 
-#: infos.php:187
+#: webinfos.php:343
 msgid "Webinfos Settings"
 msgstr ""
 
-#: infos.php:223
+#: webinfos.php:382
 #, php-format
 msgid ""
 "The uploaded file must "
 "be in %s format"
 msgstr ""
 
-#: infos.php:223
+#: webinfos.php:382
 msgid "character left."
 msgstr ""
 
-#: infos.php:223
+#: webinfos.php:382
 msgid "characters left."
 msgstr ""
 
-#: infos.php:223
+#: webinfos.php:382
 msgid ""
 "New attachments list : "
 msgstr ""
 
-#: infos.php:232
+#: webinfos.php:392
 #, php-format
 msgid "Version %s"
 msgstr ""
 
-#: infos.php:233
+#: webinfos.php:393
 msgid ""
 "Welcome to the setting "
 "panel of Webinfos plugin"
 msgstr ""
 
-#: infos.php:240
+#: webinfos.php:401
 msgid "Activate message"
 msgstr ""
 
-#: infos.php:246
+#: webinfos.php:407
 msgid "Choose action"
 msgstr ""
 
-#: infos.php:256
-msgid "Save changes"
-msgstr ""
-
-#: infos.php:277
+#: webinfos.php:417
 msgid "Feedback"
 msgstr ""
 
-#: infos.php:278
+#: webinfos.php:418
 msgid ""
 "Did you find a bug ?"
 msgstr ""
 
-#: infos.php:278
+#: webinfos.php:418
 msgid ""
 "Do you have suggestions?"
 msgstr ""
 
-#: infos.php:279
+#: webinfos.php:419
 msgid ""
 "There are several ways "
 "to report bugs and/or "
@@ -143,7 +194,7 @@ msgid ""
 "Webinfos plugins : "
 msgstr ""
 
-#: infos.php:281
+#: webinfos.php:421
 #, php-format
 msgid ""
 "Use a GitHub ticket at "
@@ -151,7 +202,7 @@ msgid ""
 "\">link</a>."
 msgstr ""
 
-#: infos.php:282
+#: webinfos.php:422
 #, php-format
 msgid ""
 "Use a Wordpress ticket "
@@ -159,142 +210,142 @@ msgid ""
 "\">link</a>."
 msgstr ""
 
-#: infos.php:283
+#: webinfos.php:423
 msgid ""
 "Use the form below to "
 "contact the plugin "
 "author."
 msgstr ""
 
-#: infos.php:290
+#: webinfos.php:430
 msgid "Send feedback"
 msgstr ""
 
-#: infos.php:301
+#: webinfos.php:460
 msgid ""
 "Choose the message that "
 "will be shown in the "
 "dashboard"
 msgstr ""
 
-#: infos.php:302
+#: webinfos.php:461
 msgid "Activate message :"
 msgstr ""
 
-#: infos.php:306
+#: webinfos.php:467
 msgid ""
 "Change welcome message"
 msgstr ""
 
-#: infos.php:307
+#: webinfos.php:468
 msgid "Action :"
 msgstr ""
 
-#: infos.php:312
+#: webinfos.php:481
 msgid ""
 "Welcome message settings"
 msgstr ""
 
-#: infos.php:313
+#: webinfos.php:482
 msgid ""
 "Contact informations"
 msgstr ""
 
-#: infos.php:315
+#: webinfos.php:486
 msgid "Message num:"
 msgstr ""
 
-#: infos.php:317
+#: webinfos.php:490
 msgid "Title :"
 msgstr ""
 
-#: infos.php:318
+#: webinfos.php:491
 msgid "Website URL :"
 msgstr ""
 
-#: infos.php:319
+#: webinfos.php:492
 msgid "Upload logo :"
 msgstr ""
 
-#: infos.php:320
+#: webinfos.php:493
 msgid ""
 "Logo alternate text :"
 msgstr ""
 
-#: infos.php:321
+#: webinfos.php:494
 msgid "Welcome message :"
 msgstr ""
 
-#: infos.php:322
+#: webinfos.php:495
 msgid "Attachments :"
 msgstr ""
 
-#: infos.php:323
+#: webinfos.php:496
 msgid "Upload video :"
 msgstr ""
 
-#: infos.php:324
+#: webinfos.php:497
 msgid ""
 "Show contact infos :"
 msgstr ""
 
-#: infos.php:325
+#: webinfos.php:498
 msgid "Upload photo :"
 msgstr ""
 
-#: infos.php:326
+#: webinfos.php:499
 msgid ""
 "Photo alternate text :"
 msgstr ""
 
-#: infos.php:327
+#: webinfos.php:500
 msgid "Phone :"
 msgstr ""
 
-#: infos.php:328
+#: webinfos.php:501
 msgid "Email :"
 msgstr ""
 
-#: infos.php:333
+#: webinfos.php:517
 msgid ""
 "Fill the form below to "
 "send your feedback "
 "directly to the author"
 msgstr ""
 
-#: infos.php:334
+#: webinfos.php:518
 msgid "Feedback sender :"
 msgstr ""
 
-#: infos.php:335
+#: webinfos.php:519
 msgid "Feedback subject :"
 msgstr ""
 
-#: infos.php:336
+#: webinfos.php:520
 msgid "Feedback message :"
 msgstr ""
 
-#: infos.php:366
+#: webinfos.php:603
 msgid "Add message"
 msgstr ""
 
-#: infos.php:372
+#: webinfos.php:609
 msgid "Edit message "
 msgstr ""
 
-#: infos.php:373
+#: webinfos.php:610
 msgid "Erase message "
 msgstr ""
 
-#: infos.php:431
-#: infos.php:497
+#: webinfos.php:695
+#: webinfos.php:797
 #, php-format
 msgid ""
 "Uploaded file must be "
 "in %s or %s format."
 msgstr ""
 
-#: infos.php:452
+#: webinfos.php:732
 #, php-format
 msgid "%d character left."
 msgid_plural ""
@@ -302,37 +353,53 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: infos.php:456
+#: webinfos.php:736
 msgid ""
 "HTML tags are supported."
 msgstr ""
 
-#: infos.php:546
+#: webinfos.php:876
 #, php-format
 msgid ""
 "Uploaded file must be "
 "in %s format."
 msgstr ""
 
-#: infos.php:556
+#: webinfos.php:894
 msgid ""
 "The website URL will be "
 "applied on the logo."
 msgstr ""
 
-#: infos.php:565
+#: webinfos.php:911
 msgid ""
 "Attachments list : "
 msgstr ""
 
-#: infos.php:596
+#: webinfos.php:947
 msgid ""
 "Click or drop your "
 "files here"
 msgstr ""
 
-#: infos.php:601
+#: webinfos.php:952
 msgid ""
 "You can upload several "
 "files as attachment."
+msgstr ""
+
+#: webinfos.php:960
+msgid "Save changes"
+msgstr ""
+
+#: webinfos.php:972
+msgid ""
+"An error occurs with "
+"feedback form"
+msgstr ""
+
+#: webinfos.php:1010
+msgid ""
+"Modifications saved "
+"successfully"
 msgstr ""
