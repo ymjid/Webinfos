@@ -16,7 +16,9 @@ class Webinfos_Welcome {
 			<?php
 			// if logo exists we resize it.
 			if ($row->imgurl != "") {
-				$img=getimagesize (plugin_dir_url(__FILE__).'img/'.$row->imgurl);
+				$upload_loc=wp_upload_dir();
+				$img_loc=$upload_loc['baseurl'].'/webinfos/img/'.$row->imgurl;
+				$img=getimagesize ($img_loc);
 				$dwimg=$img[0];
 				$dhimg=$img[1];
 				if ($img[0]>'400') {
@@ -36,12 +38,12 @@ class Webinfos_Welcome {
 				// if website exists we make the logo clickable by adding the website link | if no website we just show the logo
 				if ($row->website != "") {
 				?>
-				<a href="<?php echo esc_url($row->website); ?>"><img src="<?php echo esc_url(plugin_dir_url(__FILE__).'img/'.$row->imgurl); ?>" height="<?php echo esc_html($img[1]).'px'; ?>" width:"<?php echo esc_html($img[0]).'px'; ?>" alt="<?php echo esc_html($row->imgalt); ?>"></a>
+				<a href="<?php echo esc_url($row->website); ?>"><img src="<?php echo esc_url($img_loc); ?>" height="<?php echo esc_html($img[1]).'px'; ?>" width:"<?php echo esc_html($img[0]).'px'; ?>" alt="<?php echo esc_html($row->imgalt); ?>"></a>
 				<?php
 				}
 				else {
 				?>
-				<img src="<?php echo esc_url(plugin_dir_url(__FILE__).'img/'.$row->imgurl); ?>" height="<?php echo esc_html($img[1]).'px'; ?>" width:"<?php echo esc_html($img[0]).'px'; ?>" alt="<?php echo esc_html($row->imgalt); ?>">
+				<img src="<?php echo esc_url($img_loc); ?>" height="<?php echo esc_html($img[1]).'px'; ?>" width:"<?php echo esc_html($img[0]).'px'; ?>" alt="<?php echo esc_html($row->imgalt); ?>">
 				<?php
 				}
 				?>
@@ -59,13 +61,15 @@ class Webinfos_Welcome {
 			?>
 			<br>
 			<?php
+			$upload_loc=wp_upload_dir();
+			$attach_loc=$upload_loc['baseurl'].'/webinfos/attachment/';
 			$filelist=explode(',' , $row->attachment);
 			$nb=0;
 			for ($i=0; $i<sizeof($filelist); $i++) {
 				$nb++;
 				?>
 				<span>
-				<a href="<?php echo esc_url(plugin_dir_url(__FILE__).'attachment/'.$filelist[$i]); ?>"><?php echo esc_html($filelist[$i]); ?></a>
+				<a href="<?php echo esc_url($attach_loc.$filelist[$i]); ?>"><?php echo esc_html($filelist[$i]); ?></a>
 				<?php 
 				if ($i+1 != sizeof($filelist))  {
 					echo ' | ';	
@@ -88,9 +92,11 @@ class Webinfos_Welcome {
 			<?php
 			// if video exists we show the video in a html5 player
 			if ($row->video != null && $row->video != "") {
+					$upload_loc=wp_upload_dir();
+					$video_loc=$upload_loc['baseurl'].'/webinfos/video/'.$row->video;
 			?>
 			<video width="auto" controls>
-  				<source src="<?php echo esc_url(plugin_dir_url(__FILE__).'video/'.$row->video); ?>" type="video/mp4">
+  				<source src="<?php echo esc_url($video_loc); ?>" type="video/mp4">
   				<?php _e('Your browser does not support HTML5 video.', 'webinfos'); ?>
 			</video>
 			<?php
@@ -105,7 +111,9 @@ class Webinfos_Welcome {
 				<?php
 				// if photo exists we resize it.
 				if ($row->contactimgurl != "") {
-					$photo=getimagesize (plugin_dir_url(__FILE__).'img/'.$row->contactimgurl);
+					$upload_loc=wp_upload_dir();
+					$photo_loc=$upload_loc['baseurl'].'/webinfos/img/'.$row->contactimgurl;
+					$photo=getimagesize ($photo_loc);
 					$dwimg=$photo[0];
 					$dhimg=$photo[1];
 					if ($photo[0]>'100') {
@@ -123,7 +131,7 @@ class Webinfos_Welcome {
 						$photo[0]= $photo[1]/($dhimg/$dwimg);
 					}
 				?>
-				<img src="<?php echo esc_url(plugin_dir_url(__FILE__).'img/'.$row->contactimgurl); ?>" height="<?php echo esc_html($photo[1]).'px'; ?>" width="<?php echo esc_html($photo[0]).'px'; ?>" alt="<?php echo esc_html($row->contactimgalt); ?>" >
+				<img src="<?php echo esc_url($photo_loc); ?>" height="<?php echo esc_html($photo[1]).'px'; ?>" width="<?php echo esc_html($photo[0]).'px'; ?>" alt="<?php echo esc_html($row->contactimgalt); ?>" >
 				<?php
 				}
 				?>
@@ -155,21 +163,18 @@ class Webinfos_Welcome {
 	*/
 	function custom_welcome () {
 		global $wpdb;
-		// if a msg is activated we use the msg's title as widget title | if no msg is activated we set the title as "Undefined title"
-		if (get_option('active_msg')!= "0" && get_option('active_msg')!= "" && get_option('active_msg')!== null) {
+		// if a msg is activated we show the msg in a dashboard widget
+		if (get_option('active_msg')!= "0" && get_option('active_msg')!= "" && get_option('active_msg')!= null) {
 			$id=get_option('active_msg');
 			$selectsql = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}webinfos WHERE id = %d", $id);
 			$row = $wpdb->get_row($selectsql);
 			$webinfos_title=$row->title;
+			wp_add_dashboard_widget(
+				'custom_welcome_widget',
+				$webinfos_title,
+				array($this, 'custom_welcome_content')
+				);
 		}
-		else {
-			$webinfos_title="Undefined title";
-		}	
-		wp_add_dashboard_widget(
-		'custom_welcome_widget',
-		$webinfos_title,
-		array($this, 'custom_welcome_content')
-		);
 	
 	}
 }

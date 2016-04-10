@@ -35,7 +35,7 @@ class Webinfos_Plugin
 {
     public function __construct()
     {
-    	register_activation_hook(__FILE__, array('Webinfos_Plugin', 'install'));
+    	register_activation_hook(__FILE__, array('Webinfos_Plugin', 'webinfos_install'));
    		add_action('admin_menu', array($this, 'add_admin_menu'));
 		add_action('plugins_loaded', array($this, 'webinfos_textdomain'));
 		add_action('wp_loaded', array($this, 'save_data'));
@@ -47,27 +47,56 @@ class Webinfos_Plugin
 		add_action( 'wp_ajax_webinfos_action', array($this,  'webinfos_action_callback' ));
 		include(plugin_dir_path(__FILE__).'/custom_welcome.php');
 		new Webinfos_Welcome();
-		register_uninstall_hook(__FILE__, array('Webinfos_Plugin', 'uninstall'));
+		register_uninstall_hook(__FILE__, array('Webinfos_Plugin', 'webinfos_uninstall'));
     }
 
 /*
 ** At the installation of the plugin, create a database table needed to save messages
 */
-    public function install()
+    public function webinfos_install()
     {
     	global $wpdb;
     	
     	$wpdb->query("CREATE TABLE IF NOT EXISTS {$wpdb->prefix}webinfos (id INT AUTO_INCREMENT PRIMARY KEY, title VARCHAR(255) NOT NULL, website VARCHAR(255) NOT NULL,imgurl VARCHAR(255) NOT NULL, imgalt VARCHAR(255) NOT NULL, msgtxt VARCHAR(500) NOT NULL, contact BOOL NOT NULL, contactimgurl VARCHAR(255) NOT NULL, contactimgalt VARCHAR(255) NOT NULL, tel VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, video VARCHAR(255) NOT NULL, attachment VARCHAR(5000) NOT NULL, state ENUM('alive', 'dead') NOT NULL);");
+    	
+    	$upload_loc=wp_upload_dir();
+    	if (!file_exists($upload_loc['basedir'].'/webinfos/')) {
+    		mkdir($upload_loc['basedir'].'/webinfos', 0755, true);
+   		 	mkdir($upload_loc['basedir'].'/webinfos/img', 0755, true);
+   		 	mkdir($upload_loc['basedir'].'/webinfos/attachment', 0755, true);
+   		 	mkdir($upload_loc['basedir'].'/webinfos/video', 0755, true);
+		}
     }
 
 /*
 ** At the Uninstallation of the plugin, remove the database and its data.
 */
-    public function uninstall()
+    public function webinfos_uninstall()
     {
     	global $wpdb;
     	
 		$wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}webinfos;");
+		
+		 function rrmdir($dir) { 
+   		if (is_dir($dir)) { 
+   		  $objects = scandir($dir); 
+     		foreach ($objects as $object) { 
+       			if ($object != "." && $object != "..") { 
+         			if (is_dir($dir."/".$object))
+          				 rrmdir($dir."/".$object);
+        			 else
+           				unlink($dir."/".$object); 
+      				 } 
+     		}
+     		rmdir($dir); 
+   		} 
+ 		}
+ 		$upload_loc=wp_upload_dir();
+		$dir=$upload_loc['basedir'].'/webinfos/';
+		if (file_exists($dir)) {
+			rrmdir($dir);
+		}
+
 
     }
     
@@ -103,35 +132,27 @@ class Webinfos_Plugin
 			
 			$safe_tel = is_numeric($_POST['webinfos_tel'] );
 			if ( ! $safe_tel ) {
-  				$safe_tel = '';
-  				$_POST['webinfos_tel']=$safe_tel;
+  				$tel = '';
 			}
-			if ( strlen( $safe_tel ) > 15 ) {
-		  		$safe_tel = substr( $safe_tel, 0, 15 );
-		  		$_POST['webinfos_tel']=$safe_tel;
+			if ( strlen( $tel ) > 15 ) {
+		  		$tel = substr( $tel, 0, 15 );
 			}
 
 			$title = sanitize_text_field($_POST['webinfos_title']);
-			$_POST['webinfos_title'] ==  $title;
 		
 			$imgalt = sanitize_text_field($_POST['webinfos_imgalt']);
-			$_POST['webinfos_imgalt'] ==  $imgalt;		
 		
-			$contactimgalt = sanitize_text_field($_POST['webinfos_contactimgalt']);
-			$_POST['webinfos_contactimgalt'] ==  $contactimgalt;	
+			$contactimgalt = sanitize_text_field($_POST['webinfos_contactimgalt']);	
 		
-			$website = esc_url_raw($_POST['webinfos_website'], array('http', 'https'));
-			$_POST['webinfos_website'] ==  $website;	
+			$website = esc_url_raw($_POST['webinfos_website'], array('http', 'https'));	
 		
 			$msgtxt =  wp_kses_post($_POST['webinfos_msgtxt']);
-			$_POST['webinfos_msgtxt'] ==  $msgtxt;
 		
 			$email= sanitize_text_field($_POST['webinfos_email']);
-			$_POST['webinfos_email'] = $email;
-			$testemail = is_email($_POST['webinfos_email']);
+			$testemail = is_email($email);
 			if ($testemail == false) {
 				/*error*/
-				$_POST['webinfos_email']='';
+				$email='';
 				$error['webinfos_email']= __('An error occurs with contact email', 'webinfos');
 			}
 		
@@ -164,7 +185,8 @@ class Webinfos_Plugin
     		// if testdrop = false -> upload files from the file button | if testdrop = true -> files are already uploaded
     		if ($testdrop=='false') {
     			if(isset($_FILES['webinfos_attachment']) && is_array($_FILES['webinfos_attachment']['name']) && $_FILES['webinfos_attachment']['name'][0] != ""){
-    				$dirattach=plugin_dir_path(__FILE__).'attachment/';
+    				$upload_loc=wp_upload_dir();
+    				$dirattach=$upload_loc['basedir'].'/webinfos/attachment/';
     				for ($i=0; $i< sizeof($_FILES['webinfos_attachment']['name']); $i++) {
     					$testattachmentfile = validate_file( $_FILES['webinfos_attachment']['tmp_name'][$i]);
 						if ($testattachmentfile == 0) {
@@ -188,7 +210,8 @@ class Webinfos_Plugin
     		}
     		// upload logo img
     		if(isset($_FILES['webinfos_imgurl']) && $_FILES['webinfos_imgurl']['name']!=""){
-    			$dirimg=plugin_dir_path(__FILE__).'img/';
+    			$upload_loc=wp_upload_dir();
+    			$dirimg=$upload_loc['basedir'].'/webinfos/img/';
     			$testimgurl= validate_file( $_FILES['webinfos_imgurl']['tmp_name']);
     			$filepath = pathinfo($_FILES['webinfos_imgurl']['name']);
     			if ($testimgurl==0 && $filepath['extension']=='png' || $filepath['extension']=='jpg') {
@@ -202,7 +225,8 @@ class Webinfos_Plugin
     		}
     		// upload cantact phpto
     		if(isset($_FILES['webinfos_contactimgurl']) && $_FILES['webinfos_contactimgurl']['name']!=""){
-    			$dirimg=plugin_dir_path(__FILE__).'img/';
+    			$upload_loc=wp_upload_dir();
+    			$dirimg=$upload_loc['basedir'].'/webinfos/img/';
     			$testcontactimgurl = validate_file( $_FILES['webinfos_contactimgurl']['tmp_name']);
     			$filepath = pathinfo($_FILES['webinfos_contactimgurl']['name']);
     			if ($testcontactimgurl==0  && $filepath['extension']=='png' || $filepath['extension']=='jpg') {
@@ -216,7 +240,8 @@ class Webinfos_Plugin
     		}
     		// upload msg video
     		if(isset($_FILES['webinfos_video']) && $_FILES['webinfos_video']['name']!=""){
-    			$dirvid=plugin_dir_path(__FILE__).'video/';
+    			$upload_loc=wp_upload_dir();
+    			$dirvid=$upload_loc['basedir'].'/webinfos/video/';
     			$testvideofile = validate_file( $_FILES['webinfos_video']['tmp_name']);
     			$filepath = pathinfo($_FILES['webinfos_video']['name']);
     			if ($testvideofile == 0 && $filepath['extension']=='mp4') {
@@ -237,7 +262,7 @@ class Webinfos_Plugin
 				// if $testdrop = false -> we add the msg in the database with its data | if $testdrop = true -> msg attachment files already exist so we edit the msg in database with its missing datas 
 				if ($testdrop=='false') {
 					$wpdb->insert("{$wpdb->prefix}webinfos", 
-					array('title' => $_POST['webinfos_title'], 'website' => $_POST['webinfos_website'], 'imgurl' => $_FILES['webinfos_imgurl']['name'], 'imgalt' => $_POST['webinfos_imgalt'], 'msgtxt' => $_POST['webinfos_msgtxt'], 'contact' => $contact, 'contactimgurl' => $_FILES['webinfos_contactimgurl']['name'], 'contactimgalt' => $_POST['webinfos_contactimgalt'], 'tel' => $_POST['webinfos_tel'], 'email' => $_POST['webinfos_email'], 'video' => $_FILES['webinfos_video']['name'], 'attachment' => $filelist, 'state' => 'alive')
+					array('title' => $title, 'website' => $website, 'imgurl' => $_FILES['webinfos_imgurl']['name'], 'imgalt' => $imgalt, 'msgtxt' => $msgtxt, 'contact' => $contact, 'contactimgurl' => $_FILES['webinfos_contactimgurl']['name'], 'contactimgalt' => $contactimgalt, 'tel' => $tel, 'email' => $email, 'video' => $_FILES['webinfos_video']['name'], 'attachment' => $filelist, 'state' => 'alive')
 					);
 				}
 				else {
@@ -246,7 +271,7 @@ class Webinfos_Plugin
 					$row = $wpdb->get_row($updatesql);
 					$attach=$row->attachment;
 						$wpdb->update("{$wpdb->prefix}webinfos", 
-						array('title' => $_POST['webinfos_title'], 'website' => $_POST['webinfos_website'], 'imgurl' => $imgurl, 'imgalt' => $_POST['webinfos_imgalt'], 'msgtxt' => $_POST['webinfos_msgtxt'], 'contact' => $contact, 'contactimgurl' => $contactimgurl, 'contactimgalt' => $_POST['webinfos_contactimgalt'], 'tel' => $_POST['webinfos_tel'], 'email' => $_POST['webinfos_email'], 'video' => $video, 'attachment' => $attach, 'state' => 'alive'), array('state' => 'birth')
+						array('title' => $title, 'website' => $website, 'imgurl' => $imgurl, 'imgalt' => $imgalt, 'msgtxt' => $msgtxt, 'contact' => $contact, 'contactimgurl' => $contactimgurl, 'contactimgalt' => $imgalt, 'tel' => $tel, 'email' => $email, 'video' => $video, 'attachment' => $attach, 'state' => 'alive'), array('state' => 'birth')
 						);
 				}
 			}
@@ -255,10 +280,9 @@ class Webinfos_Plugin
 				$safe_nummsg = is_numeric($_POST['webinfos_msg']);
 				if ( ! $safe_nummsg ) {
   					$safe_nummsg = '';
-  					$_POST['webinfos_msg']=$safe_nummsg;
 				}
 				else {
-					$num=$_POST['webinfos_msg'];
+					$num=$safe_nummsg;
 					$updatesql = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}webinfos WHERE id = %d", $num);
 					$row = $wpdb->get_row($updatesql);
 					if (!is_null($row)) {
@@ -275,7 +299,7 @@ class Webinfos_Plugin
 								$attach=$row->attachment;
 							}
 							$wpdb->update("{$wpdb->prefix}webinfos", 
-							array('title' => $_POST['webinfos_title'], 'website' => $_POST['webinfos_website'], 'imgurl' => $imgurl, 'imgalt' => $_POST['webinfos_imgalt'], 'msgtxt' => $_POST['webinfos_msgtxt'], 'contact' => $contact, 'contactimgurl' => $contactimgurl, 'contactimgalt' => $_POST['webinfos_contactimgalt'], 'tel' => $_POST['webinfos_tel'], 'email' => $_POST['webinfos_email'], 'video' => $video, 'attachment' => $attach), array('id' => $num)
+							array('title' => $title, 'website' => $website, 'imgurl' => $imgurl, 'imgalt' => $imgalt, 'msgtxt' => $msgtxt, 'contact' => $contact, 'contactimgurl' => $contactimgurl, 'contactimgalt' => $contactimgalt, 'tel' => $tel, 'email' => $email, 'video' => $video, 'attachment' => $attach), array('id' => $num)
 							);
 					}
 				}
@@ -296,7 +320,7 @@ class Webinfos_Plugin
     		if (isset($_POST['webinfos_nummsg']) ) {
     			$testnum = is_numeric($_POST['webinfos_nummsg']);
     			if ($testnum != false) {
-    				$num=abs($_POST['webinfos_nummsg']);
+    				$num=abs($testnum);
     			}
     			else {
     				/*error*/
@@ -347,6 +371,7 @@ class Webinfos_Plugin
 	// webinfos setting html code
 	public function menu_html(){
 		global $wpdb;
+		
 			// define the required format for the logo
 				$imgext= array('png', 'jpg');
 			$imgformat="";
@@ -384,7 +409,8 @@ class Webinfos_Plugin
 		// The script can be enqueued now or later.
 		wp_enqueue_script( 'webinfos_handle' );
 		$keys=array_keys($translation_array);
-		$plugin_dir=plugin_dir_path(__FILE__);
+		$upload_loc=wp_upload_dir();
+		$plugin_dir=$upload_loc['basedir'].'/webinfos/';
 		$plugin_infos=get_plugin_data(plugin_dir_path(__FILE__).'webinfos.php'); 
 		echo '<div class="webinfos_options_container">';
 		echo '<h1>'.esc_html(get_admin_page_title()).'</h1>';
@@ -548,15 +574,15 @@ class Webinfos_Plugin
     			}
     			if ($filelist2 != "") {
     				// edit attachment files in the database if we edit the msg
-    				if ($_POST['editmsg'] != null || $_POST['editmsg'] > 0) {
+    				if ($msg != null || $msg > 0) {
     					$wpdb->update("{$wpdb->prefix}webinfos", 
-							array('attachment' => $filelist2), array('id' => $_POST['editmsg'])
+							array('attachment' => $filelist2), array('id' => $msg)
 							);
 							$upload='true';
     				}
     				// save attachment files in the database if we add a msg
     				// birth state is there to inform that the msg isn't completely saved (only attachments are saved)
-    				if ($_POST['editmsg'] == 0) {
+    				if ($msg == 0) {
     					$wpdb->insert("{$wpdb->prefix}webinfos", 
 						array('attachment' => $filelist2, 'state' => 'birth')
 						);
@@ -578,6 +604,7 @@ class Webinfos_Plugin
 		$result = $wpdb->get_results($selectsql);
 	?>
 			<select name="active_msg" size="1">
+			<option value="0"></option>
 			<?php
 			if (!is_null($result)) {
 				foreach ($result as $msg) {
@@ -589,6 +616,11 @@ class Webinfos_Plugin
 			?>
 			</select>
 		<?php
+		if (get_option('active_msg')== "0" || get_option('active_msg')== "" || get_option('active_msg')== null) {
+		?>
+		<p class="warning_msg"><?php echo __("None of available messages have been activated.", 'webinfos'); ?></p>
+		<?php	
+		}
 	}
 	/*
 	** html code used by msg data settings
@@ -666,7 +698,9 @@ class Webinfos_Plugin
 			$dataalt=$row->imgalt;
 			// if the logo exist we resize it
 			if ($data !="") {
-				$img=getimagesize (plugin_dir_url(__FILE__).'img/'.$data);
+				$upload_loc=wp_upload_dir();
+				$file_loc=$upload_loc['baseurl'].'/webinfos/img/'.$data;
+				$img=getimagesize ($file_loc);
 				$dwimg=$img[0];
 				$dhimg=$img[1];
 				if ($img[0]>'400') {
@@ -685,7 +719,7 @@ class Webinfos_Plugin
 				}
 				?>
 				<p>
-					<img src="<?php echo esc_url(plugin_dir_url(__FILE__).'img/'.$data); ?>" alt="<?php echo esc_html($dataalt); ?>" height="<?php echo esc_html($img[1]).'px'; ?>" width="<?php echo esc_html($img[0]).'px'; ?>"/>
+					<img src="<?php echo esc_url($file_loc); ?>" alt="<?php echo esc_html($dataalt); ?>" height="<?php echo esc_html($img[1]).'px'; ?>" width="<?php echo esc_html($img[0]).'px'; ?>"/>
 				</p>
 				<?php
 			}
@@ -768,6 +802,8 @@ class Webinfos_Plugin
 			$dataalt=$row->contactimgalt;
 			// if the photo exist we resize it
 			if ($data != "") {
+				$upload_loc=wp_upload_dir();
+				$file_loc=$upload_loc['baseurl'].'/webinfos/img/'.$data;
 				$img=getimagesize (plugin_dir_url(__FILE__).'img/'.$data);
 				$dwimg=$img[0];
 				$dhimg=$img[1];
@@ -787,7 +823,7 @@ class Webinfos_Plugin
 				}
 				?>
 				<p>
-					<img src="<?php echo esc_url(plugin_dir_url(__FILE__).'img/'.$row->contactimgurl); ?>" alt="<?php echo esc_html($dataalt); ?>" height="<?php echo esc_html($img[1]).'px'; ?>" width="<?php echo esc_html($img[0]).'px'; ?>"/>
+					<img src="<?php echo esc_url($file_loc); ?>" alt="<?php echo esc_html($dataalt); ?>" height="<?php echo esc_html($img[1]).'px'; ?>" width="<?php echo esc_html($img[0]).'px'; ?>"/>
 				</p>
 				<?php
 			}
@@ -861,10 +897,12 @@ class Webinfos_Plugin
 			$row = $wpdb->get_row($selectsql);
 			$data=$row->video;
 			if ($data != null && $data != "") {
+				$upload_loc=wp_upload_dir();
+				$file_loc=$upload_loc['baseurl'].'/webinfos/video/'.$data;
 			?>
 			<p>
 				<video width="480" controls>
-  					<source src="<?php echo esc_url(plugin_dir_url(__FILE__).'video/'.$row->video); ?>" type="video/mp4">
+  					<source src="<?php echo esc_url($file_loc); ?>" type="video/mp4">
   					<?php _e('Your browser does not support HTML5 video.', 'webinfos'); ?>
 				</video>
 			</p>
@@ -907,6 +945,8 @@ class Webinfos_Plugin
 			$row = $wpdb->get_row($selectsql);
 			$data=$row->attachment;
 			if ($data != "") {
+				$upload_loc=wp_upload_dir();
+				$file_loc=$upload_loc['baseurl'].'/webinfos/attachment/';
 			?>
 				<?php _e('Attachments list : ', 'webinfos'); ?>
 				<div> 
@@ -922,7 +962,7 @@ class Webinfos_Plugin
 					}
 					?>
 					<span>
-						<a href="<?php echo esc_url(plugin_dir_url(__FILE__).'attachment/'.$filelist[$i]); ?>"><?php echo esc_html($filelist[$i]); ?></a>
+						<a href="<?php echo esc_url($file_loc.$filelist[$i]); ?>"><?php echo esc_html($filelist[$i]); ?></a>
 					<?php 
 					if ($i+1 != sizeof($filelist))  {
 						echo ' | ';	
@@ -1004,13 +1044,13 @@ class Webinfos_Plugin
 	<?php
 	}
 
-	function webinfos_admin_notice__success() {
+	public function webinfos_admin_notice__success() {
     ?>
     <div class="notice notice-success is-dismissible">
         <p><?php _e( 'Modifications saved successfully', 'webinfos' ); ?></p>
     </div>
     <?php
-	}
+	}		
 
 }
 
