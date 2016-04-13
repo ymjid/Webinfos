@@ -412,6 +412,7 @@ class Webinfos_Plugin
 		$upload_loc=wp_upload_dir();
 		$plugin_dir=$upload_loc['basedir'].'/webinfos/';
 		$plugin_infos=get_plugin_data(plugin_dir_path(__FILE__).'webinfos.php'); 
+		echo '<div class="wrap">';
 		echo '<div class="webinfos_options_container">';
 		echo '<h1>'.esc_html(get_admin_page_title()).'</h1>';
 				?>
@@ -444,8 +445,8 @@ class Webinfos_Plugin
 		<h2><?php _e('Did you find a bug ?', 'webinfos');?> <?php _e('Do you have suggestions?', 'webinfos');?></h2>
 		<p><?php _e('There are several ways to report bugs and/or give feedback about the Webinfos plugins : ', 'webinfos')?>
 		<ol>
-			<li><?php echo sprintf(__('Use a GitHub ticket at this <a href="%s">link</a>.', 'webinfos'), '#');?></li>
-			<li><?php echo sprintf(__('Use a Wordpress ticket at this <a href="%s">link</a>.', 'webinfos'), '#');?></li>
+			<li><?php echo sprintf(__('Use a GitHub ticket at this <a href="%s">link</a>.', 'webinfos'), 'https://github.com/ymjid/webinfos/issues/new');?></li>
+			<li><?php echo sprintf(__('Use a Wordpress ticket at this <a href="%s">link</a>.', 'webinfos'), 'https://wordpress.org/support/plugin/webinfos');?></li>
 			<li><?php _e('Use the form below to contact the plugin author.', 'webinfos');?></li>
 		</ol>
 		</p>
@@ -455,6 +456,7 @@ class Webinfos_Plugin
 			<input class="hide" type="text" name="testsend" value="1" />
 			<?php submit_button(__('Send feedback', 'webinfos')) ?>
 		</form>
+		</div>
 		</div>
 		</div>
 		<link rel="stylesheet" href="<?php echo plugin_dir_url(__FILE__).'css/webinfos.css'; ?>" />
