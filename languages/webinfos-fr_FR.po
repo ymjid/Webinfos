@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
-"POT-Creation-Date: 2016-04-06 18:04+0200\n"
+"POT-Creation-Date: 2016-04-14 18:03+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -27,7 +27,7 @@ msgstr ""
 msgid "Attachments : "
 msgstr "Pièces jointes : "
 
-#: custom_welcome.php:100 webinfos.php:889
+#: custom_welcome.php:100 webinfos.php:1034
 msgid "Your browser does not support HTML5 video."
 msgstr "Votre navigateur ne supporte pas les videos HTML5"
 
@@ -43,98 +43,130 @@ msgstr "Tel : "
 msgid "Email : "
 msgstr "Mail : "
 
-#: webinfos.php:106
+#: webinfos.php:126
+msgid "An error occurs with message activation"
+msgstr "Une erreur s’est produite à l’activation du message"
+
+#: webinfos.php:131
+msgid "An error occurs the message id"
+msgstr "Une erreur s’est produite avec l’identifiant du message"
+
+#: webinfos.php:141
+msgid "The message have been activated successfully"
+msgstr "Le message a bien été activé"
+
+#: webinfos.php:156
+msgid ""
+"None of messages have been activated. Dashboard won't show any of your "
+"message."
+msgstr ""
+"Aucun message n’a été activé. Le tableau de bord affichera aucun de vos "
+"messages."
+
+#: webinfos.php:166
 msgid "An error occurs with form verification"
 msgstr "Une erreur est survenue lors de la vérification du formulaire"
 
-#: webinfos.php:113
+#: webinfos.php:173
 msgid "An error occurs with attachment files"
 msgstr "Une erreur est survenue avec les fichiers de pièce jointes"
 
-#: webinfos.php:139
+#: webinfos.php:199
 msgid "An error occurs with contact email"
 msgstr "Une erreur est survenue avec l’email de contact"
 
-#: webinfos.php:148
+#: webinfos.php:208
 msgid "An error occurs with contact checkbox"
 msgstr ""
 "Une erreur est survenue avec l’option d’affichage des informations de contact"
 
-#: webinfos.php:190
+#: webinfos.php:250
 msgid "An error occurs with attachment file list"
 msgstr "Une erreur est survenue avec la liste des fichiers de pièce jointes"
 
-#: webinfos.php:206
+#: webinfos.php:266
 msgid "An error occurs with uploaded logo"
 msgstr "Une erreur est survenue avec le logo uploadé"
 
-#: webinfos.php:221
+#: webinfos.php:281
 msgid "An error occurs with uploaded photo"
 msgstr "Une erreur est survenue avec la photo uploadé"
 
-#: webinfos.php:236
+#: webinfos.php:296
 msgid "An error occurs with uploaded video"
 msgstr "Une erreur est survenue avec la vidéo uploadé"
 
-#: webinfos.php:310 webinfos.php:516
+#: webinfos.php:385
+msgid "Modifications saved successfully"
+msgstr "Modifications sauvegardées avec succès"
+
+#: webinfos.php:392
+msgid "Message added successfully"
+msgstr "Le message a bien été enregistrer"
+
+#: webinfos.php:413 webinfos.php:647
 msgid "An error occurs with message id"
 msgstr "Une erreur est survenue avec l’identifiant du message"
 
-#: webinfos.php:350
+#: webinfos.php:466
+msgid "The message have been erased successfully"
+msgstr "Le message a été effacer correctement"
+
+#: webinfos.php:478
 msgid "Webinfos plugin"
 msgstr "Extension Webinfos"
 
-#: webinfos.php:350
+#: webinfos.php:478
 msgid "Webinfos Settings"
 msgstr "Options Webinfos"
 
-#: webinfos.php:390
+#: webinfos.php:518
 #, php-format
 msgid "The uploaded file must be in %s format"
 msgstr "Le fichier uploadé doit être au format %s"
 
-#: webinfos.php:390
+#: webinfos.php:518
 msgid "character left."
 msgstr "caractère restant."
 
-#: webinfos.php:390
+#: webinfos.php:518
 msgid "characters left."
 msgstr "caractères restants."
 
-#: webinfos.php:390
+#: webinfos.php:518
 msgid "New attachments list : "
 msgstr "Nouvelle liste de pièce jointe :"
 
-#: webinfos.php:401
+#: webinfos.php:530
 #, php-format
 msgid "Version %s"
 msgstr "Version %s"
 
-#: webinfos.php:402
+#: webinfos.php:531
 msgid "Welcome to the setting panel of Webinfos plugin"
 msgstr "Bienvenue dans le panneau de configuration de l’extension Webinfos."
 
-#: webinfos.php:410
+#: webinfos.php:540
 msgid "Activate message"
 msgstr "Activer message"
 
-#: webinfos.php:416
+#: webinfos.php:546
 msgid "Choose action"
 msgstr "Choisir action"
 
-#: webinfos.php:426
+#: webinfos.php:556
 msgid "Feedback"
 msgstr "Réaction"
 
-#: webinfos.php:427
+#: webinfos.php:557
 msgid "Did you find a bug ?"
 msgstr "Vous avez trouvé un bug ?"
 
-#: webinfos.php:427
+#: webinfos.php:557
 msgid "Do you have suggestions?"
 msgstr "Vous avez des idées ?"
 
-#: webinfos.php:428
+#: webinfos.php:558
 msgid ""
 "There are several ways to report bugs and/or give feedback about the "
 "Webinfos plugins : "
@@ -142,184 +174,179 @@ msgstr ""
 "Il existe plusieurs moyens de signaler les bugs et/ou donner son avis à "
 "propos de l’extension Webinfos :"
 
-#: webinfos.php:430
+#: webinfos.php:560
 #, php-format
 msgid "Use a GitHub ticket at this <a href=\"%s\">link</a>."
 msgstr "Utiliser un ticket Github en cliquant <a href=\"%s\">ici</a>."
 
-#: webinfos.php:431
+#: webinfos.php:561
 #, php-format
 msgid "Use a Wordpress ticket at this <a href=\"%s\">link</a>."
 msgstr "Utiliser un ticket Wordpress en cliquant <a href=\"%s\">ici</a>."
 
-#: webinfos.php:432
+#: webinfos.php:562
 msgid "Use the form below to contact the plugin author."
 msgstr ""
 "Utiliser le formulaire ci-dessous pour contacter l’auteur de l’extension."
 
-#: webinfos.php:439
+#: webinfos.php:569
 msgid "Send feedback"
 msgstr "Envoyer réaction"
 
-#: webinfos.php:469
+#: webinfos.php:600
 msgid "Choose the message that will be shown in the dashboard"
 msgstr "Sélectionner le message qui sera afficher dans le tableau de bord"
 
-#: webinfos.php:470
+#: webinfos.php:601
 msgid "Activate message :"
 msgstr "Activer message : "
 
-#: webinfos.php:476
+#: webinfos.php:607
 msgid "Change welcome message"
 msgstr "Modifier le message d’accueil"
 
-#: webinfos.php:477
+#: webinfos.php:608
 msgid "Action :"
 msgstr "Action : "
 
-#: webinfos.php:490
+#: webinfos.php:621
 msgid "Welcome message settings"
 msgstr "Options du message d’accueil"
 
-#: webinfos.php:491
+#: webinfos.php:622
 msgid "Contact informations"
 msgstr "Informations de contact"
 
-#: webinfos.php:495
+#: webinfos.php:626
 msgid "Message num:"
 msgstr "Numéro du message : "
 
-#: webinfos.php:499
+#: webinfos.php:630
 msgid "Title :"
 msgstr "Titre : "
 
-#: webinfos.php:500
+#: webinfos.php:631
 msgid "Website URL :"
 msgstr "URL du site internet : "
 
-#: webinfos.php:501
+#: webinfos.php:632
 msgid "Upload logo :"
 msgstr "Upload logo : "
 
-#: webinfos.php:502
+#: webinfos.php:633
 msgid "Logo alternate text :"
 msgstr "Texte alternatif du logo : "
 
-#: webinfos.php:503
+#: webinfos.php:634
 msgid "Welcome message :"
 msgstr "Message d’accueil : "
 
-#: webinfos.php:504
+#: webinfos.php:635
 msgid "Attachments :"
 msgstr "Pièces jointes : "
 
-#: webinfos.php:505
+#: webinfos.php:636
 msgid "Upload video :"
 msgstr "Upload video : "
 
-#: webinfos.php:506
+#: webinfos.php:637
 msgid "Show contact infos :"
 msgstr "Afficher les informations de contact : "
 
-#: webinfos.php:507
+#: webinfos.php:638
 msgid "Upload photo :"
 msgstr "Upload photo : "
 
-#: webinfos.php:508
+#: webinfos.php:639
 msgid "Photo alternate text :"
 msgstr "Texte alternatif de la photo : "
 
-#: webinfos.php:509
+#: webinfos.php:640
 msgid "Phone :"
 msgstr "Tel : "
 
-#: webinfos.php:510
+#: webinfos.php:641
 msgid "Email :"
 msgstr "Mail : "
 
-#: webinfos.php:526
+#: webinfos.php:675
 msgid "Fill the form below to send your feedback directly to the author"
 msgstr ""
 "Remplissez le formulaire ci-dessous pour envoyer votre réaction directement "
 "à l’auteur"
 
-#: webinfos.php:527
+#: webinfos.php:676
 msgid "Feedback sender :"
 msgstr "Expéditeur de la réaction :"
 
-#: webinfos.php:528
+#: webinfos.php:677
 msgid "Feedback subject :"
 msgstr "Sujet de la réaction :"
 
-#: webinfos.php:529
+#: webinfos.php:678
 msgid "Feedback message :"
 msgstr "Message de la réaction :"
 
-#: webinfos.php:604
-msgid "None of available messages have been activated."
-msgstr "Aucun des messages disponible a été activé."
-
-#: webinfos.php:618
+#: webinfos.php:763
 msgid "Add message"
 msgstr "Ajouter message"
 
-#: webinfos.php:624
+#: webinfos.php:769
 msgid "Edit message "
 msgstr "Editer message"
 
-#: webinfos.php:625
+#: webinfos.php:770
 msgid "Erase message "
 msgstr "Effacer message"
 
-#: webinfos.php:712 webinfos.php:816
+#: webinfos.php:857 webinfos.php:961
 #, php-format
 msgid "Uploaded file must be in %s or %s format."
 msgstr "Le fichier uploadé doit être au format %s ou %s."
 
-#: webinfos.php:749
+#: webinfos.php:894
 #, php-format
 msgid "%d character left."
 msgid_plural "%d characters left."
 msgstr[0] "%d caractère restant."
 msgstr[1] "%d caractères restants."
 
-#: webinfos.php:753
+#: webinfos.php:898
 msgid "HTML tags are supported."
 msgstr "Les balises HTML sont supportés."
 
-#: webinfos.php:897
+#: webinfos.php:1042
 #, php-format
 msgid "Uploaded file must be in %s format."
 msgstr "Le fichier uploadé doit être au format %s."
 
-#: webinfos.php:915
+#: webinfos.php:1060
 msgid "The website URL will be applied on the logo."
 msgstr ""
 "L’URL du site internet sera appliqué sur le logo en tant que lien hypertexte."
 
-#: webinfos.php:934
+#: webinfos.php:1079
 msgid "Attachments list : "
 msgstr "Liste de pièces jointes : "
 
-#: webinfos.php:970
+#: webinfos.php:1115
 msgid "Click or drop your files here"
 msgstr "Cliquer ou glissez-déposez vos fichier ici"
 
-#: webinfos.php:975
+#: webinfos.php:1120
 msgid "You can upload several files as attachment."
 msgstr "Plusieurs fichiers peuvent être uploadé en tant que pièce jointe."
 
-#: webinfos.php:983
+#: webinfos.php:1128
 msgid "Save changes"
 msgstr "Enregistrer les modifications"
 
-#: webinfos.php:995
+#: webinfos.php:1140
 msgid "An error occurs with feedback form"
 msgstr "Une erreur est survenue avec le formulaire de réaction"
 
-#: webinfos.php:1033
-msgid "Modifications saved successfully"
-msgstr "Modifications sauvegardées avec succès"
+#~ msgid "None of available messages have been activated."
+#~ msgstr "Aucun des messages disponible a été activé."
 
 #~ msgid "Content created with the Webinfos plugin"
 #~ msgstr "Contenu crée avec l’extension Webinfos"

@@ -2,8 +2,8 @@
 Contributors: 
 Tags: webinfos, dashboard widget, dashboard, message, welcome message, custom message
 Requires at least: 4.4.2
-Tested up to: 4.4.2
-Stable tag: 4.4.2
+Tested up to: 4.5
+Stable tag: 4.5
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,7 @@ Webinfos allows to admins to show a customisable message in the dashboard.
 == Description ==
 
 Webinfos allows to admins to show a customisable message in the dashboard in is own dashboard widget.
-The plugin supports several custom messages (only one will be visible on the dashboard). Its settings language can be change (French for now)
+The plugin supports several custom messages (only one will be visible on the dashboard). The plugin is translatable but only French is supported for now.
 Webinfos integrate a feedback form to report a bug and/or give suggestions to the plugin author.
 
 

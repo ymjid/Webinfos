@@ -57,7 +57,7 @@ class Webinfos_Plugin
     {
     	global $wpdb;
     	
-    	$wpdb->query("CREATE TABLE IF NOT EXISTS {$wpdb->prefix}webinfos (id INT AUTO_INCREMENT PRIMARY KEY, title VARCHAR(255) NOT NULL, website VARCHAR(255) NOT NULL,imgurl VARCHAR(255) NOT NULL, imgalt VARCHAR(255) NOT NULL, msgtxt VARCHAR(500) NOT NULL, contact BOOL NOT NULL, contactimgurl VARCHAR(255) NOT NULL, contactimgalt VARCHAR(255) NOT NULL, tel VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, video VARCHAR(255) NOT NULL, attachment VARCHAR(5000) NOT NULL, state ENUM('alive', 'dead') NOT NULL);");
+    	$wpdb->query("CREATE TABLE IF NOT EXISTS {$wpdb->prefix}webinfos (id INT AUTO_INCREMENT PRIMARY KEY, title VARCHAR(255) NOT NULL, website VARCHAR(255) NOT NULL,imgurl VARCHAR(255) NOT NULL, imgalt VARCHAR(255) NOT NULL, msgtxt VARCHAR(500) NOT NULL, contact BOOL NOT NULL, contactimgurl VARCHAR(255) NOT NULL, contactimgalt VARCHAR(255) NOT NULL, tel VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, video VARCHAR(255) NOT NULL, attachment VARCHAR(5000) NOT NULL, state ENUM('alive', 'dead', 'birth') NOT NULL);");
     	
     	$upload_loc=wp_upload_dir();
     	if (!file_exists($upload_loc['basedir'].'/webinfos/')) {
@@ -66,6 +66,8 @@ class Webinfos_Plugin
    		 	mkdir($upload_loc['basedir'].'/webinfos/attachment', 0755, true);
    		 	mkdir($upload_loc['basedir'].'/webinfos/video', 0755, true);
 		}
+		
+		add_option( 'active_msg', '0');
     }
 
 /*
@@ -96,6 +98,7 @@ class Webinfos_Plugin
 		if (file_exists($dir)) {
 			rrmdir($dir);
 		}
+		delete_option('active_msg');
 
 
     }
@@ -113,21 +116,61 @@ class Webinfos_Plugin
 */
     public function save_data() {
     	global $wpdb;
-    	global $error;
-		$error= array();
+    	
+		global $error;
+		$error= "";
+		if (isset($_POST['testactive'])) {
+			$safe_active = intval( $_POST['testactive'] );
+			if ( ! $safe_active ) {
+				$safe_active='';
+  				$error= $error + __('An error occurs with message activation', 'webinfos') + "|";
+			}
+			if (isset($_POST['active_msg'])) {
+				$test_active = is_numeric($_POST['active_msg']);
+				if ($test_active == 0) {
+					$error= $error + __('An error occurs the message id', 'webinfos') + "|";
+				}
+				else {
+					update_option( 'active_msg', $_POST['active_msg']);
+					if ($_POST['active_msg'] != 0) {
+						add_action( 'admin_notices', 'webinfos_admin_notice__success' );
+				
+						function webinfos_admin_notice__success() {
+    						?>
+   					 		<div class="notice notice-success is-dismissible">
+       							 <p><?php _e( 'The message have been activated successfully', 'webinfos' ); ?></p>
+    						</div>
+   					 	<?php
+						}	
+					}
+				}
+			}
+
+		}
+		if (get_option("active_msg")== 0) {
+			add_action( 'admin_notices', 'webinfos_admin_notice__warning' );
+						
+			function webinfos_admin_notice__warning() {
+ 				?>
+ 				<div class="update-nag notice">
+    				<p><?php _e("None of messages have been activated. Dashboard won't show any of your message.", 'webinfos'); ?></p>
+  				</div>
+  				<?php
+			}
+		}
     	// if $_POST['test'] exist, message datas are fillable
     	if (isset($_POST['test'])) {
     		$safe_test = intval( $_POST['test'] );
 			if ( ! $safe_test ) {
 				$safe_test='';
-  				$error['test']= __('An error occurs with form verification', 'webinfos');
+  				$error= $error + __('An error occurs with form verification', 'webinfos') + "|";
 			}
 		
 			$safe_drop = is_numeric($_POST['dropused']);
-			if ($safe_drop == false) {
+			if ($safe_drop == 0) {
 				/*error*/
 				$_POST['dropused']='0';
-				$error['dropused']= __('An error occurs with attachment files', 'webinfos');
+				$error= $error + __('An error occurs with attachment files', 'webinfos') + "|";
 			}
 			
 			$safe_tel = is_numeric($_POST['webinfos_tel'] );
@@ -153,7 +196,7 @@ class Webinfos_Plugin
 			if ($testemail == false) {
 				/*error*/
 				$email='';
-				$error['webinfos_email']= __('An error occurs with contact email', 'webinfos');
+				$error= $error + __('An error occurs with contact email', 'webinfos') + "|";
 			}
 		
     		// $contact = 1 -> show contact infos | $contact = 0 -> hide contact infos
@@ -162,7 +205,7 @@ class Webinfos_Plugin
 				if (!$testcontact) {
 					/*error*/
 					$contact="0";
-					$error['webinfos_contact']= __('An error occurs with contact checkbox', 'webinfos');
+					$error= $error + __('An error occurs with contact checkbox', 'webinfos') + "|";
 				}
 				else {
     				$contact="1";
@@ -204,7 +247,7 @@ class Webinfos_Plugin
     				}
     				else {
     					/*error*/
-    					$error['webinfos_attachment']= __('An error occurs with attachment file list', 'webinfos');
+    					$error= $error + __('An error occurs with attachment file list', 'webinfos') + "|";
     				}
     			}
     		}
@@ -220,7 +263,7 @@ class Webinfos_Plugin
     			}
     			else {
     				/*error*/
-    				$error['webinfos_imgurl']= __('An error occurs with uploaded logo', 'webinfos');
+    				$error= $error + __('An error occurs with uploaded logo', 'webinfos') + "|";
     			}
     		}
     		// upload cantact phpto
@@ -235,7 +278,7 @@ class Webinfos_Plugin
     			}
     			else {
     				/*error*/
-    				$error['webinfos_contactimgurl']= __('An error occurs with uploaded photo', 'webinfos');
+    				$error= $error + __('An error occurs with uploaded photo', 'webinfos') + "|";
     			}
     		}
     		// upload msg video
@@ -250,13 +293,15 @@ class Webinfos_Plugin
     			}
     			else {
     				/*error*/
-    				$error['webinfos_video']= __('An error occurs with uploaded video', 'webinfos');
+    				$error= $error + __('An error occurs with uploaded video', 'webinfos') + "|";
     			}
     		}
     		$imgurl=$_FILES['webinfos_imgurl']['name'];
 			$contactimgurl=$_FILES['webinfos_contactimgurl']['name'];
 			$video=$_FILES['webinfos_video']['name'];
 			$attach=$filelist;
+			$add_msg="false";
+			$edit_msg="false";
 			// if $_POST['webinfos_msg'] doesn't exist -> msg doesn't exist so we add it in the database
 			if (!isset($_POST['webinfos_msg'])) {
 				// if $testdrop = false -> we add the msg in the database with its data | if $testdrop = true -> msg attachment files already exist so we edit the msg in database with its missing datas 
@@ -264,6 +309,7 @@ class Webinfos_Plugin
 					$wpdb->insert("{$wpdb->prefix}webinfos", 
 					array('title' => $title, 'website' => $website, 'imgurl' => $_FILES['webinfos_imgurl']['name'], 'imgalt' => $imgalt, 'msgtxt' => $msgtxt, 'contact' => $contact, 'contactimgurl' => $_FILES['webinfos_contactimgurl']['name'], 'contactimgalt' => $contactimgalt, 'tel' => $tel, 'email' => $email, 'video' => $_FILES['webinfos_video']['name'], 'attachment' => $filelist, 'state' => 'alive')
 					);
+					$add_msg="true";
 				}
 				else {
 					$state='birth';
@@ -273,6 +319,7 @@ class Webinfos_Plugin
 						$wpdb->update("{$wpdb->prefix}webinfos", 
 						array('title' => $title, 'website' => $website, 'imgurl' => $imgurl, 'imgalt' => $imgalt, 'msgtxt' => $msgtxt, 'contact' => $contact, 'contactimgurl' => $contactimgurl, 'contactimgalt' => $imgalt, 'tel' => $tel, 'email' => $email, 'video' => $video, 'attachment' => $attach, 'state' => 'alive'), array('state' => 'birth')
 						);
+						$add_msg="true";
 				}
 			}
 			// if $_POST['webinfos_msg'] exists and is != 0 -> we want to edit message data
@@ -301,30 +348,69 @@ class Webinfos_Plugin
 							$wpdb->update("{$wpdb->prefix}webinfos", 
 							array('title' => $title, 'website' => $website, 'imgurl' => $imgurl, 'imgalt' => $imgalt, 'msgtxt' => $msgtxt, 'contact' => $contact, 'contactimgurl' => $contactimgurl, 'contactimgalt' => $contactimgalt, 'tel' => $tel, 'email' => $email, 'video' => $video, 'attachment' => $attach), array('id' => $num)
 							);
+							$edit_msg="true";
 					}
 				}
 			}
-			if (!empty($error)) {
+			if ($error != "") {
 				/*error msg*/
+				do_action('admin_notices',$error);
+				add_action( 'admin_notices', 'webinfos_admin_notice__error');
+				
+				function webinfos_admin_notice__error($error) {
+					global $error;
+				?>
+					<div class="notice notice-error">
+					<?php
+					$errors = explode("|", $error);
+					for ($i=0; $i<sizeof($errors); $i++){
+						?><p><?php echo $errors[$i]; ?></p>
+					<?php
+					}
+					?>
+					</div> 
+				<?php
+				}
 				
 			}
 			else {
-				add_action( 'admin_notices', array($this, 'webinfos_admin_notice__success') );
+				add_action( 'admin_notices', 'webinfos_admin_notice__success' );
+				
+			    function webinfos_admin_notice__success() {
+    				?>
+   					 <div class="notice notice-success is-dismissible">
+   					 <?php
+   					 	if ($edit_msg == "true") {
+   					 ?>
+       					 <p><?php _e( 'Modifications saved successfully', 'webinfos' ); ?></p>
+       				<?php
+   					 	}
+   					 ?>
+   					 <?php
+   					 	if ($add_msg == "true") {
+   					 ?>
+       					 <p><?php _e( 'Message added successfully', 'webinfos' ); ?></p>
+       				<?php
+   					 	}
+   					 ?>
+    				</div>
+   				 <?php
+				}
 			}
     	}
     	// if $_POST['test'] doesn't exist, message datas aren't fillable
     	else {
-    		$error= array();
+    		$error= "";
     		//variable to check msg state
     		$erase_msg='false';
     		if (isset($_POST['webinfos_nummsg']) ) {
     			$testnum = is_numeric($_POST['webinfos_nummsg']);
-    			if ($testnum != false) {
-    				$num=abs($testnum);
+    			if ($testnum != 0) {
+    				$num=abs($_POST['webinfos_nummsg']);
     			}
     			else {
     				/*error*/
-    				$error['webinfos_nummsg']= __('An error occurs with message id', 'webinfos');
+    				$error= $error + __('An error occurs with message id', 'webinfos') + "|";
     			}
     		}
     		// if $_POST['webinfos_nummsg'] < 0 -> we want to erase the msg (for real we edit the msg state)
@@ -351,11 +437,36 @@ class Webinfos_Plugin
 				}
 			}
 			if ($erase_msg=='true'){
-				if (!empty($error)) {
+				if ($error !="") {
 					/* error msg*/
+					do_action('admin_notices',$error);
+					add_action( 'admin_notices', 'webinfos_admin_notice__error');
+				
+					function webinfos_admin_notice__error($error) {
+						global $error;
+					?>
+						<div class="notice notice-error">
+						<?php
+						$errors = explode("|", $error);
+						for ($i=0; $i<sizeof($errors); $i++){
+							?><p><?php echo $errors[$i]; ?></p>
+						<?php
+						}
+						?>
+						</div> 
+					<?php
+					}
 				}
 				else {
-					add_action( 'admin_notices', array($this, 'webinfos_admin_notice__success') );
+					add_action( 'admin_notices', 'webinfos_admin_notice__success' );
+				
+					function webinfos_admin_notice__success() {
+    					?>
+   					 	<div class="notice notice-success is-dismissible">
+       						 <p><?php _e( 'The message have been erased successfully', 'webinfos' ); ?></p>
+    					</div>
+   					 <?php
+					}
 				}
 			}		
     	}
@@ -418,13 +529,14 @@ class Webinfos_Plugin
 				?>
 		<h2><?php echo sprintf(__('Version %s', 'webinfos'), $plugin_infos['Version']); ?></h2>
 		<p><?php _e('Welcome to the setting panel of Webinfos plugin', 'webinfos'); ?></p>
-		<form method="post" action="options.php">
+		<form method="post" action="#">
 			<?php 
 			// we use only usable msg for activation
 			$row = $wpdb->get_row("SELECT id FROM {$wpdb->prefix}webinfos WHERE state = 'alive'");
 			if (!is_null($row)) { ?>
 			<?php settings_fields('webinfos_active'); ?>
 			<?php do_settings_sections('webinfos_active'); ?>
+			<input class="hide" type="text" name="testactive" value="1" />
 			<?php submit_button(__('Activate message', 'webinfos')) ?>
 			<?php } ?>
 		</form>
@@ -500,15 +612,15 @@ class Webinfos_Plugin
 	*/
 	public function register_settings() {
 		global $error;
-		$error= array();
+		$error= "";
 		// if $_POST['webinfos_nummsg'] exist, we test if it's an int
 		if (isset($_POST['webinfos_nummsg'])) {
-			//$test_num_msg = filter_var($_POST['webinfos_nummsg'], FILTER_VALIDATE_INT);
 			$test_num_msg=is_numeric($_POST['webinfos_nummsg']);
-			if ($test_num_msg) {
-				add_settings_section('webinfos_section1', __('Welcome message settings', 'webinfos'), array($this, 'section_html'), 'webinfos_settings');
-				add_settings_section('webinfos_section2', __('Contact informations', 'webinfos'), array($this, 'section_html'), 'webinfos_settings');
-				//$_POST['webinfos_nummsg'] = $test_num_msg;
+			if ($test_num_msg != 0) {
+				if ($_POST['webinfos_nummsg'] >=0) {
+					add_settings_section('webinfos_section1', __('Welcome message settings', 'webinfos'), array($this, 'section_html'), 'webinfos_settings');
+					add_settings_section('webinfos_section2', __('Contact informations', 'webinfos'), array($this, 'section_html'), 'webinfos_settings');
+				}
 				// if we edit a msg we show its id
 				if ($_POST['webinfos_nummsg'] != '0') {
 					add_settings_field('webinfos_msg', __('Message num:', 'webinfos'), array($this, 'editmsg_html'), 'webinfos_settings', 'webinfos_section1');
@@ -532,8 +644,26 @@ class Webinfos_Plugin
 			}
 			else {
 				/*error*/
-				$error['webinfos_nummsg']= __('An error occurs with message id', 'webinfos');
+				$error = __('An error occurs with message id', 'webinfos');
 				/* error msg*/	
+				do_action('admin_notices', $error);
+				add_action( 'admin_notices', 'webinfos_admin_notice__error');
+				
+				function webinfos_admin_notice__error($error) {
+					global $error;
+				?>
+					<div class="notice notice-error">
+					<?php
+					$errors = explode("|", $error);
+					for ($i=0; $i<sizeof($errors); $i++){
+						?><p><?php echo $errors[$i]; ?></p>
+					<?php
+					}
+					?>
+					</div> 
+				<?php
+				}	
+
 			}
 		}		
 	}
@@ -559,8 +689,9 @@ class Webinfos_Plugin
 		$msg=is_numeric($_POST['editmsg']);
 		$data = is_array($_FILES['dragfiles']);
 		$upload='false';
-			if ($msg!=false && $data!=false) {
+			if ($msg!=0 && $data!=false) {
     		$filelist2="";
+    		$msgid=$_POST['editmsg'];
     			// upload attachments and created the list to save in database
     			for ($i=0; $i< sizeof($_FILES['dragfiles']['name']); $i++) {
     				$testfiles = validate_file($_FILES['dragfiles']['tmp_name'][$i]);
@@ -576,15 +707,15 @@ class Webinfos_Plugin
     			}
     			if ($filelist2 != "") {
     				// edit attachment files in the database if we edit the msg
-    				if ($msg != null || $msg > 0) {
+    				if ($msgid != null || $msgid > 0) {
     					$wpdb->update("{$wpdb->prefix}webinfos", 
-							array('attachment' => $filelist2), array('id' => $msg)
+							array('attachment' => $filelist2), array('id' => $msgid)
 							);
 							$upload='true';
     				}
     				// save attachment files in the database if we add a msg
     				// birth state is there to inform that the msg isn't completely saved (only attachments are saved)
-    				if ($msg == 0) {
+    				if ($msgid == 0) {
     					$wpdb->insert("{$wpdb->prefix}webinfos", 
 						array('attachment' => $filelist2, 'state' => 'birth')
 						);
@@ -618,11 +749,6 @@ class Webinfos_Plugin
 			?>
 			</select>
 		<?php
-		if (get_option('active_msg')== "0" || get_option('active_msg')== "" || get_option('active_msg')== null) {
-		?>
-		<p class="warning_msg"><?php echo __("None of available messages have been activated.", 'webinfos'); ?></p>
-		<?php	
-		}
 	}
 	/*
 	** html code used by msg data settings
@@ -1011,7 +1137,23 @@ class Webinfos_Plugin
 		if (isset($_POST['testsend'])) {
 			$safe_testsend = intval( $_POST['testsend'] );
 			if ( !$safe_testsend ) {
-  				$error['testsend']= __('An error occurs with feedback form', 'webinfos');
+  				$error= __('An error occurs with feedback form', 'webinfos');
+  				add_action( 'admin_notices', 'webinfos_admin_notice__error');
+				
+				function webinfos_admin_notice__error($error) {
+					global $error;
+				?>
+					<div class="notice notice-error">
+					<?php
+					$errors = explode("|", $error);
+					for ($i=0; $i<sizeof($errors); $i++){
+						?><p><?php echo $errors[$i]; ?></p>
+					<?php
+					}
+					?>
+					</div> 
+				<?php
+				}
 			}
 			else {
 				$current_user=wp_get_current_user();
@@ -1045,14 +1187,6 @@ class Webinfos_Plugin
 	<textarea name="webinfos_feedback_msg" cols="50" rows="7"></textarea>
 	<?php
 	}
-
-	public function webinfos_admin_notice__success() {
-    ?>
-    <div class="notice notice-success is-dismissible">
-        <p><?php _e( 'Modifications saved successfully', 'webinfos' ); ?></p>
-    </div>
-    <?php
-	}		
 
 }
 
