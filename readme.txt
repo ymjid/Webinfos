@@ -1,5 +1,5 @@
 === Webinfos ===
-Contributors: 
+Contributors: ymjid
 Tags: webinfos, dashboard widget, dashboard, message, welcome message, custom message
 Requires at least: 4.4.2
 Tested up to: 4.5
