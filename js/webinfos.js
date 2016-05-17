@@ -10,6 +10,22 @@ function getExtension(filename){	// Get the file format
         return (parts[(parts.length-1)]);
 }    
 
+function toggleForm(id) {  // Hide all forms and show the form number id
+				for (var i=1; i<4; i++) {
+					if (document.getElementById("form" + i) != null && document.getElementById("msgbutton" + i) != null) {
+						document.getElementById("form" + i).style.display = "none";
+						document.getElementById("msgbutton" + i).className = "custombutton";
+					}
+				}			
+				if (document.getElementById("form" + id).style.display == "none") {
+					document.getElementById("form" + id).style.display = "inline-block";
+					document.getElementById("msgbutton" + id).className = "custombuttonused";
+				}
+				else {
+					document.getElementById("form" + id).style.display = "none";
+					document.getElementById("msgbutton" + id).className = "custombutton";
+				}
+}
 
 // check uploaded file format
 // champ : file button id

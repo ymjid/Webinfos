@@ -44,3 +44,25 @@ textarea {
 .contact_email {
 	margin-top:0px;	
 }
+.custommenu {
+	background-color:#23282d;
+}
+.custombutton {
+	color:#fff;
+	width:100px;
+	text-align:center;
+	display:table-cell;
+	cursor:pointer;
+}
+.custombuttonused {
+	background: #32373c none repeat scroll 0 0;
+    color: #00b9eb;
+	width:100px;
+	text-align:center;
+	display:table-cell;
+	cursor:pointer;
+}
+.custombutton:hover {
+	background: #32373c none repeat scroll 0 0;
+    color: #00b9eb;
+}

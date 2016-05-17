@@ -3,7 +3,7 @@
 Plugin Name: Webinfos Plugin
 Plugin URI:
 Description: A plugin showing a customisable welcome message in the dashboard.
-Version: 1.0
+Version: 1.1
 Author: ymjid
 Author URI:
 License: GPLv2
@@ -174,8 +174,12 @@ class Webinfos_Plugin
 			}
 			
 			$safe_tel = is_numeric($_POST['webinfos_tel'] );
-			if ( ! $safe_tel ) {
+			if ( $safe_tel== 0 ) {
   				$tel = '';
+  				$error= $error + __('An error occurs with contact phone number', 'webinfos') + "|";
+			}
+			else {
+				$tel=$_POST['webinfos_tel'];
 			}
 			if ( strlen( $tel ) > 15 ) {
 		  		$tel = substr( $tel, 0, 15 );
@@ -375,28 +379,25 @@ class Webinfos_Plugin
 			}
 			else {
 				add_action( 'admin_notices', 'webinfos_admin_notice__success' );
-				
-			    function webinfos_admin_notice__success() {
-    				?>
-   					 <div class="notice notice-success is-dismissible">
+				if ($edit_msg == "true") {
+			    	function webinfos_admin_notice__success() {
+    					?>
+   						 <div class="notice notice-success is-dismissible">
+       					 	<p><?php _e( 'Modifications saved successfully', 'webinfos' ); ?></p>
+    					</div>
    					 <?php
-   					 	if ($edit_msg == "true") {
-   					 ?>
-       					 <p><?php _e( 'Modifications saved successfully', 'webinfos' ); ?></p>
-       				<?php
-   					 	}
-   					 ?>
-   					 <?php
-   					 	if ($add_msg == "true") {
-   					 ?>
-       					 <p><?php _e( 'Message added successfully', 'webinfos' ); ?></p>
-       				<?php
-   					 	}
-   					 ?>
-    				</div>
-   				 <?php
+					}
 				}
-			}
+				if ($add_msg == "true") {
+					function webinfos_admin_notice__success() {
+    					?>
+   						 <div class="notice notice-success is-dismissible">
+       					 	<p><?php _e( 'Message added successfully', 'webinfos' ); ?></p>
+    					</div>
+   					 <?php
+					}
+				}
+    		}
     	}
     	// if $_POST['test'] doesn't exist, message datas aren't fillable
     	else {
@@ -529,7 +530,30 @@ class Webinfos_Plugin
 				?>
 		<h2><?php echo sprintf(__('Version %s', 'webinfos'), $plugin_infos['Version']); ?></h2>
 		<p><?php _e('Welcome to the setting panel of Webinfos plugin', 'webinfos'); ?></p>
-		<form method="post" action="#">
+		<!-- Custom menu to navigate easely through forms -->
+		<div class="custommenu">
+			<div id="msgbutton2" class="custombutton" onClick="toggleForm('2');">
+				<?php _e('Message Selection', 'webinfos'); ?>
+			</div>
+			<div id="msgbutton1" class="custombutton" onClick="toggleForm('1');">
+				<?php _e('Message Options', 'webinfos'); ?>
+			</div>
+			<?php
+			if ($_POST['webinfos_nummsg'] >= '0') {
+				?>
+			<div id="msgbutton3" class="custombuttonused" onClick="toggleForm('3');">
+				<?php if ($_POST['webinfos_nummsg']== '0') { 
+						_e('New Message Content', 'webinfos');
+					} 
+					else {
+						_e('Edit Message Content', 'webinfos');
+					}?>
+			</div>
+			<?php
+			}
+			?>
+		</div>
+		<form class="hide" method="post" id="form2" action="#">
 			<?php 
 			// we use only usable msg for activation
 			$row = $wpdb->get_row("SELECT id FROM {$wpdb->prefix}webinfos WHERE state = 'alive'");
@@ -540,12 +564,12 @@ class Webinfos_Plugin
 			<?php submit_button(__('Activate message', 'webinfos')) ?>
 			<?php } ?>
 		</form>
-		<form method="post" action="">
+		<form class="hide" method="post" id="form1" action="">
 			<?php settings_fields('webinfos_action'); ?>
 			<?php do_settings_sections('webinfos_action'); ?>
 			<?php submit_button(__('Choose action', 'webinfos')) ?>
 		</form>
-		<form method="post" action="#" id="message_content" enctype="multipart/form-data">
+		<form id="form3" method="post" action="#" id="message_content" enctype="multipart/form-data">
 			<?php settings_fields('webinfos_settings'); ?>
 			<?php do_settings_sections('webinfos_settings'); ?>
 		</form>
@@ -596,7 +620,7 @@ class Webinfos_Plugin
 	*/
 	public function register_active_msg () {
 		register_setting('webinfos_active', 'active_msg');
-		
+
 		add_settings_section('webinfos_section', __('Choose the message that will be shown in the dashboard', 'webinfos'), array($this, 'section_html'), 'webinfos_active');
 		add_settings_field('active_msg', __('Activate message :', 'webinfos'), array($this, 'activemsg_html'), 'webinfos_active', 'webinfos_section');
 	}
