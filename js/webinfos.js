@@ -27,6 +27,15 @@ function toggleForm(id) {  // Hide all forms and show the form number id
 				}
 }
 
+function toggleOption() {
+	if (document.getElementById('active_msg_all').checked==true) {
+		document.getElementById('active_msg').disabled=true;
+	}
+	else {
+		document.getElementById('active_msg').disabled=false;
+	}
+}
+
 // check uploaded file format
 // champ : file button id
 // listeExt : allowed format list
@@ -159,9 +168,10 @@ function callback(files) {
       }
  } 
  
-    // upload dragged files 
+    // jquery
      jQuery(document).ready(function($) {
-			$('#dummy_submit').click(function(e) {
+     	// upload dragged files 
+		$('#dummy_submit').click(function(e) {
      			if (document.getElementById('dropused').value=="1") { 
 					$.ajax({
   						type: "POST",
@@ -178,7 +188,34 @@ function callback(files) {
      				document.getElementById("custom_submit").click();
      			}
      	});
-
+     	// switchmsg
+     	// change the content of the dashboard widget //
+		function switchmsg (nbmsg) {
+					$('#msg'+nbmsg).fadeIn(2000);
+					$('#custom_welcome_widget > h2').text($('#msgtitle'+nbmsg).text());
+					$('#custom_welcome_widget > h2').fadeIn(2000);
+					setTimeout(function(){
+  						$('#msg'+nbmsg).fadeOut(2000);
+  						$('#custom_welcome_widget > h2').fadeOut(2000);
+					}, 5000);
+		}
+		function loop (n, msglist) {
+			switchmsg (msglist[n]);
+			if (n+1<msglist.length) {
+				n++;
+			}
+			else {
+				n=0;
+			}
+			setTimeout(function(){
+  				loop(n, msglist);
+  			}, 7000);
+		}
+		
+		if (typeof msgtab != "undefined" && msgtab != null && msgtab.length > 1) {
+			var i=0;
+			loop(i, msgtab);
+		}
 	}); 	
 	
 // drag & drop interactions applies when the droppable area exists 

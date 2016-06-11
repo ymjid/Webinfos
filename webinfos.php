@@ -3,7 +3,7 @@
 Plugin Name: Webinfos Plugin
 Plugin URI:
 Description: A plugin showing a customisable welcome message in the dashboard.
-Version: 1.1
+Version: 1.2
 Author: ymjid
 Author URI:
 License: GPLv2
@@ -67,7 +67,8 @@ class Webinfos_Plugin
    		 	mkdir($upload_loc['basedir'].'/webinfos/video', 0755, true);
 		}
 		
-		add_option( 'active_msg', '0');
+		add_option( 'webinfos_active_msg', '0');
+		add_option( 'webinfos_active_msg_all', '0');
     }
 
 /*
@@ -98,7 +99,8 @@ class Webinfos_Plugin
 		if (file_exists($dir)) {
 			rrmdir($dir);
 		}
-		delete_option('active_msg');
+		delete_option('webinfos_active_msg');
+		delete_option('webinfos_active_msg_all');
 
 
     }
@@ -131,7 +133,7 @@ class Webinfos_Plugin
 					$error= $error + __('An error occurs the message id', 'webinfos') + "|";
 				}
 				else {
-					update_option( 'active_msg', $_POST['active_msg']);
+					update_option( 'webinfos_active_msg', $_POST['active_msg']);
 					if ($_POST['active_msg'] != 0) {
 						add_action( 'admin_notices', 'webinfos_admin_notice__success' );
 				
@@ -145,9 +147,32 @@ class Webinfos_Plugin
 					}
 				}
 			}
+			if (isset($_POST['active_msg_all'])) {
+				$testallmsg=sanitize_text_field($_POST['active_msg_all']);
+				if (!$testallmsg) {
+					/*error*/
+					update_option( 'webinfos_active_msg_all', '0');
+					$error= $error + __('An error occurs with messages checkbox', 'webinfos') + "|";
+				}
+				else {
+    				update_option( 'webinfos_active_msg_all', '1');
+					add_action( 'admin_notices', 'webinfos_admin_notice__success' );
+				
+					function webinfos_admin_notice__success() {
+    					?>
+   					 	<div class="notice notice-success is-dismissible">
+       						 <p><?php _e( 'All messages have been activated successfully', 'webinfos' ); ?></p>
+    					</div>
+   					 <?php	
+					}
+				}
+			}
+			else {
+				update_option( 'webinfos_active_msg_all', '0');
+			}
 
 		}
-		if (get_option("active_msg")== 0) {
+		if (get_option("webinfos_active_msg")== 0) {
 			add_action( 'admin_notices', 'webinfos_admin_notice__warning' );
 						
 			function webinfos_admin_notice__warning() {
@@ -426,15 +451,15 @@ class Webinfos_Plugin
 				}
 			}
 			// if we erased the active msg we change the active msg to the first usable msg or we don't active msg
-			if (isset($num) && $num == get_option('active_msg') && $erase_msg=='true') {
+			if (isset($num) && $num == get_option('webinfos_active_msg') && $erase_msg=='true') {
 				$state='alive';
 				$updatesql = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}webinfos WHERE id = %s", $state);
 				$row = $wpdb->get_row($updatesql);
 				if (!is_null($row)) {
-					update_option( 'active_msg', $row->id );
+					update_option( 'webinfos_active_msg', $row->id );
 				}
 				else {
-					update_option( 'active_msg', '0');
+					update_option( 'webinfos_active_msg', '0');
 				}
 			}
 			if ($erase_msg=='true'){
@@ -514,7 +539,7 @@ class Webinfos_Plugin
 		$GLOBALS['imgext2']=$imgext2;
 		$GLOBALS['vidext']=$vidext;
 		// Register the script first.
-		wp_register_script( 'webinfos_handle', plugin_dir_url(__FILE__).'/js/webinfos.js' );
+		wp_register_script( 'webinfos_handle', plugin_dir_url(__FILE__).'js/webinfos.js' );
 		// Now we can localize the script with our data.
 		$translation_array = array( 'imgerrormsg' => sprintf(__('The uploaded file must be in %s format', 'webinfos'), $imgformat ), 'imgerrormsg2' => sprintf(__('The uploaded file must be in %s format', 'webinfos'), $imgformat2 ), 'viderrormsg' => sprintf(__('The uploaded file must be in %s format', 'webinfos'), $vidformat ), 'charmsg' => sprintf(__('character left.', 'webinfos')), 'charsmsg' => sprintf(__('characters left.', 'webinfos')), 'newlist' => sprintf(__('New attachments list : ', 'webinfos')));
 		wp_localize_script( 'webinfos_handle', 'object_name', $translation_array );
@@ -532,9 +557,18 @@ class Webinfos_Plugin
 		<p><?php _e('Welcome to the setting panel of Webinfos plugin', 'webinfos'); ?></p>
 		<!-- Custom menu to navigate easely through forms -->
 		<div class="custommenu">
-			<div id="msgbutton2" class="custombutton" onClick="toggleForm('2');">
-				<?php _e('Message Selection', 'webinfos'); ?>
-			</div>
+				<?php
+				$state='alive';
+				$selectsql = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}webinfos WHERE state = %s", $state);
+				$result = $wpdb->get_results($selectsql);
+				if (!is_null($result)) {
+				?>
+					<div id="msgbutton2" class="custombutton" onClick="toggleForm('2');">
+						<?php _e('Message Selection', 'webinfos'); ?>
+					</div>
+			<?php
+				}
+			?>
 			<div id="msgbutton1" class="custombutton" onClick="toggleForm('1');">
 				<?php _e('Message Options', 'webinfos'); ?>
 			</div>
@@ -619,10 +653,12 @@ class Webinfos_Plugin
 	** registered settings for msg activation
 	*/
 	public function register_active_msg () {
-		register_setting('webinfos_active', 'active_msg');
+		register_setting('webinfos_active', 'webinfos_active_msg');
+		register_setting('webinfos_active', 'webinfos_active_msg_all');
 
 		add_settings_section('webinfos_section', __('Choose the message that will be shown in the dashboard', 'webinfos'), array($this, 'section_html'), 'webinfos_active');
-		add_settings_field('active_msg', __('Activate message :', 'webinfos'), array($this, 'activemsg_html'), 'webinfos_active', 'webinfos_section');
+		add_settings_field('webinfos_active_msg', __('Activate message :', 'webinfos'), array($this, 'activemsg_html'), 'webinfos_active', 'webinfos_section');
+		add_settings_field('webinfos_active_msg_all', __('Activate all messages :', 'webinfos'), array($this, 'activemsgall_html'), 'webinfos_active', 'webinfos_section');
 	}
 	/*
 	** registered settings for msg actions
@@ -760,18 +796,24 @@ class Webinfos_Plugin
 		$selectsql = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}webinfos WHERE state = %s", $state);
 		$result = $wpdb->get_results($selectsql);
 	?>
-			<select name="active_msg" size="1">
+			<select id="active_msg" name="active_msg" size="1" <?php disabled(1 == get_option('webinfos_active_msg_all'));?> >
 			<option value="0"></option>
 			<?php
 			if (!is_null($result)) {
 				foreach ($result as $msg) {
 				?>
-					<option <?php if (get_option('active_msg')==$msg->id) { echo 'selected'; }?> value="<?php echo esc_html($msg->id); ?>"><?php echo esc_html($msg->id); ?></option>
+					<option <?php if (get_option('webinfos_active_msg')==$msg->id) { echo 'selected'; }?> value="<?php echo esc_html($msg->id); ?>"><?php echo esc_html($msg->id); ?></option>
 				<?php
 				}
 			}
 			?>
 			</select>
+		<?php
+	}
+	
+	public function activemsgall_html () {
+		?>
+		<input type="checkbox"  onclick="toggleOption();" id="active_msg_all" name="active_msg_all" <?php checked(1 == get_option('webinfos_active_msg_all'));?>/>
 		<?php
 	}
 	/*
